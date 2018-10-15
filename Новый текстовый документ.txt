@@ -1,0 +1,15 @@
+dp_dl = AnsariGradient_ANDREW(d=0.052, theta=90, eps=0.00016, p_pvt=30, q_osc=3.08, q_wsc=1.32, q_gsc=105, b_o=1.025, _
+                              b_w=0.998, b_g=2.81*10(-2), r_s=16.08, mu_o=166.89, mu_w=1.42, mu_g=1.068*10(-2), sigma_o=0.008, sigma_w=0.01, rho_osc=880, rho_w_sc=1034,81, rho_gsc=0.977, Units=1, Payne_et_all_holdup=0, Payne_et_all_friction=1)
+
+
+
+
+dp_dl_arr = unf_AnsariGradient(d_m=0.052, theta_deg=90, rough_m=0.00016, .Qliq_rc_m3day=4.99, .Qgas_rc_m3day=2.765, .MuLiq_rc_cP=438.5,.Mug_cP=1.056*10(-2), .sigma_liq_Nm=4.01*10(-2), .rho_liq_kgm3=971.81, .rho_gas_kgm3=32.91, P_atma=30, , betta_grav=1, betta_fric=1)
+ 
+
+Call ansari(ang1=90, arr_d_m-0.052, roughness_d=3.07*10(-3), P_atma=30, Vsl_msec=2,72*10(-2), Vsg_msec=1.5*10(-2), lambda_l=0.64, rho_grc_kgm3=32.91, rho_lrc_kgm3=971.81, Mug_rc_cP=1.056, Mul_rc_cP=438.5, sigma_l_Nm=4.01*10(-2), Hl_out_fr=0, pgf_out_atmm=0, pge_out_atmm=0, pga_out_atmm=0, pgt_out_atmm=0, fpat_out_num, , ierr)
+
+
+ansari(ang=90, di_m=0.052, ed=3.07*10(-3), P_atma=30, vsl_m3sec=2,72*10(-2), vsg_m3sec=1.5*10(-2), ens=0.64, deng_kgm3=32.91, denl_kgm3=971.81, visg=1.06*10(-2), visl=438.5, surl=4.01*10(-2), E=0, pgf=0, pge=0, pga=0, pgt=0, fpat, Optional ioerr, Optional ierr, Optional ByVal ZNLF As Boolean = False)
+
+ansari_ANDREW(ang=90, Di=0.17, ED=0.00016, p=30, vm=0.126, ens=0.623, DENG=2.17, DENL=58.07, VISG=1.07, VISL=295.76, SURL=8.89, E=0, PGF=0, pge=0, PGA=0, PGT=0, fpat, ioerr, ierr)
