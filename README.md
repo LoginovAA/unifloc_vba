@@ -1,4 +1,4 @@
-# Сравнение макросов из надстройки UniflocVBA7.3, старых макросов и программы PipeSim #
+# Сравнение макросов из надстройки UniflocVBA7.3, старых макросов и симулятора PipeSim #
 
 ### Описание и скриншоты ###
 
@@ -42,6 +42,10 @@
 Задаемся устьевым давлением и дебитом, а также строим кривые для различных ГФ
 ![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture6.PNG)
 
+В результате получаем точки построения КРД и их графики
+
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B9.png)
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B92.png)
 
 ### Контакты ###
 
