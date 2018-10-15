@@ -26,6 +26,12 @@
 Для построение КРД в PipeSim задавались следующими параметрами:
 
 ![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture1.PNG)
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture2.PNG)
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture3.PNG)
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture4.PNG)
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture5.PNG)
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture6.PNG)
+
 
 ### Контакты ###
 
