@@ -307,21 +307,21 @@ Public Function C_Div(ByRef z1 As Complex, ByRef z2 As Complex) As Complex
     Dim c As Double
     Dim d As Double
     Dim E As Double
-    Dim f As Double
+    Dim F As Double
     a = z1.X
     B = z1.Y
     c = z2.X
     d = z2.Y
     If Abs(d) < Abs(c) Then
         E = d / c
-        f = c + d * E
-        result.X = (a + B * E) / f
-        result.Y = (B - a * E) / f
+        F = c + d * E
+        result.X = (a + B * E) / F
+        result.Y = (B - a * E) / F
     Else
         E = c / d
-        f = d + c * E
-        result.X = (B + a * E) / f
-        result.Y = (-a + B * E) / f
+        F = d + c * E
+        result.X = (B + a * E) / F
+        result.Y = (-a + B * E) / F
     End If
     C_Div = result
 End Function
@@ -337,20 +337,20 @@ Public Function C_RDiv(ByVal r As Double, ByRef z2 As Complex) As Complex
     Dim c As Double
     Dim d As Double
     Dim E As Double
-    Dim f As Double
+    Dim F As Double
     a = r
     c = z2.X
     d = z2.Y
     If Abs(d) < Abs(c) Then
         E = d / c
-        f = c + d * E
-        result.X = a / f
-        result.Y = -(a * E / f)
+        F = c + d * E
+        result.X = a / F
+        result.Y = -(a * E / F)
     Else
         E = c / d
-        f = d + c * E
-        result.X = a * E / f
-        result.Y = -(a / f)
+        F = d + c * E
+        result.X = a * E / F
+        result.Y = -(a / F)
     End If
     C_RDiv = result
 End Function
@@ -480,7 +480,7 @@ Public Function ODESolverIteration(ByRef State As ODESolverState) As Boolean
     Dim M As Long
     Dim i As Long
     Dim j As Long
-    Dim K As Long
+    Dim k As Long
     Dim XC As Double
     Dim v As Double
     Dim h As Double
@@ -506,7 +506,7 @@ Public Function ODESolverIteration(ByRef State As ODESolverState) As Boolean
         M = State.RState.IA(1#)
         i = State.RState.IA(2#)
         j = State.RState.IA(3#)
-        K = State.RState.IA(4#)
+        k = State.RState.IA(4#)
         KLimit = State.RState.IA(5#)
         GridPoint = State.RState.BA(0#)
         XC = State.RState.RA(0#)
@@ -520,7 +520,7 @@ Public Function ODESolverIteration(ByRef State As ODESolverState) As Boolean
         M = -989#
         i = -834#
         j = 900#
-        K = -287#
+        k = -287#
         KLimit = 364#
         GridPoint = False
         XC = -338#
@@ -678,21 +678,21 @@ lbl_6:
     For i_ = 0# To N - 1# Step 1
         State.YNS(i_) = State.YC(i_)
     Next i_
-    K = 0#
+    k = 0#
 lbl_8:
-    If K > 5# Then
+    If k > 5# Then
         GoTo lbl_10
     End If
     
     '
     ' prepare data for the next update of YN/YNS
     '
-    State.X = State.XScale * (XC + State.RKA(K) * h)
+    State.X = State.XScale * (XC + State.RKA(k) * h)
     For i_ = 0# To N - 1# Step 1
         State.Y(i_) = State.YC(i_)
     Next i_
-    For j = 0# To K - 1# Step 1
-        v = State.RKB(K, j)
+    For j = 0# To k - 1# Step 1
+        v = State.RKB(k, j)
         For i_ = 0# To N - 1# Step 1
             State.Y(i_) = State.Y(i_) + v * State.RKK(j, i_)
         Next i_
@@ -703,21 +703,21 @@ lbl_0:
     State.RepNFEV = State.RepNFEV + 1#
     v = h * State.XScale
     For i_ = 0# To N - 1# Step 1
-        State.RKK(K, i_) = v * State.DY(i_)
+        State.RKK(k, i_) = v * State.DY(i_)
     Next i_
     
     '
     ' update YN/YNS
     '
-    v = State.RKC(K)
+    v = State.RKC(k)
     For i_ = 0# To N - 1# Step 1
-        State.YN(i_) = State.YN(i_) + v * State.RKK(K, i_)
+        State.YN(i_) = State.YN(i_) + v * State.RKK(k, i_)
     Next i_
-    v = State.RKCS(K)
+    v = State.RKCS(k)
     For i_ = 0# To N - 1# Step 1
-        State.YNS(i_) = State.YNS(i_) + v * State.RKK(K, i_)
+        State.YNS(i_) = State.YNS(i_) + v * State.RKK(k, i_)
     Next i_
-    K = K + 1#
+    k = k + 1#
     GoTo lbl_8
 lbl_10:
     
@@ -813,7 +813,7 @@ lbl_rcomm:
     State.RState.IA(1#) = M
     State.RState.IA(2#) = i
     State.RState.IA(3#) = j
-    State.RState.IA(4#) = K
+    State.RState.IA(4#) = k
     State.RState.IA(5#) = KLimit
     State.RState.BA(0#) = GridPoint
     State.RState.RA(0#) = XC

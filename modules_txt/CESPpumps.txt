@@ -183,7 +183,7 @@ Public Sub Calc_ESP(P_atma As Double, Tin_C As Double, Optional Tdis_C As Double
     Dim numSt As Integer
     Dim numStAll As Integer
     
-    dPumpSum = SetPT(P:=0, t:=0)
+    dPumpSum = SetPT(p:=0, t:=0)
     ' подготовим массив по распределению температур
     ReDim Tin_i_C(p_Pumps.count)
     ReDim Tdis_i_C(p_Pumps.count)

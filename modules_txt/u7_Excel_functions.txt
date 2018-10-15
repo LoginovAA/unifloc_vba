@@ -722,7 +722,7 @@ Public Function PVT_Rs_m3m3(P_atma, T_C, _
     End If
     Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
     
-    PVT_Rs_m3m3 = PVT.rs_m3m3
+    PVT_Rs_m3m3 = PVT.Rs_m3m3
 End Function
 ' расчет коэффициента сверхсжимаемости газа
 Public Function PVT_Z(P_atma, T_C, _
@@ -1698,7 +1698,7 @@ Public Function MF_RpGasFraction_m3m3(FreeGas_d, P_atma, T_C, _
 '
 ' выходное значение - число - давление, атма.
     Dim PVT As New CPVT
-    Dim t As Double, P As Double
+    Dim t As Double, p As Double
     PVT.Init gamma_gas, gamma_oil, gamma_wat, rsb_m3m3, Pb_atma, Bob_m3m3, PVTcorr, Tres_C, Rp_m3m3, Muob_cP
     PVT.wc_perc = wc_perc
           
@@ -1710,8 +1710,8 @@ Public Function MF_RpGasFraction_m3m3(FreeGas_d, P_atma, T_C, _
     
     'Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
     t = T_C
-    P = P_atma
-    MF_RpGasFraction_m3m3 = PVT.RpGasFraction_m3m3(FreeGas_d, P, t)
+    p = P_atma
+    MF_RpGasFraction_m3m3 = PVT.RpGasFraction_m3m3(FreeGas_d, p, t)
 End Function
 ' расчет натуральной сепарации газа на приеме насоса
 Public Function MF_SeparNat_d(Pin_atma As Double, _
@@ -2569,8 +2569,8 @@ Public Function GL_dchoke_mm(Qg_m3d As Double, Pu_atma As Double, Pd_atma As Dou
         GL_dchoke_mm = -1
         Exit Function
     End If
-    Dim K As Double
-    K = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
+    Dim k As Double
+    k = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
     
     Dim Pu_psi As Double
     Dim Pd_psi As Double
@@ -2590,15 +2590,15 @@ Public Function GL_dchoke_mm(Qg_m3d As Double, Pu_atma As Double, Pd_atma As Dou
     Qg_Mcfd = Qg_m3d / 28.31993658
     
     Dim Pd_Pu_crit As Double
-    Pd_Pu_crit = (2 / (K + 1)) ^ (K / (K - 1))
+    Pd_Pu_crit = (2 / (k + 1)) ^ (k / (k - 1))
     
     Dim Pd_Pu As Double
     Pd_Pu = Pd_atma / Pu_atma
     
     Dim c0 As Double, c1 As Double, c2 As Double
-    c0 = ((Pd_Pu ^ (2 / K) - Pd_Pu ^ (1 + 1 / K))) ^ 0.5
-    c1 = (Pd_Pu_crit ^ (2 / K) - Pd_Pu_crit ^ (1 + 1 / K)) ^ 0.5
-    c2 = (2 * G * K / (K - 1)) ^ 0.5
+    c0 = ((Pd_Pu ^ (2 / k) - Pd_Pu ^ (1 + 1 / k))) ^ 0.5
+    c1 = (Pd_Pu_crit ^ (2 / k) - Pd_Pu_crit ^ (1 + 1 / k)) ^ 0.5
+    c2 = (2 * G * k / (k - 1)) ^ 0.5
     
     Dim a As Double
     
@@ -2631,21 +2631,21 @@ Function GL_dPgasPipe_atmg(ByVal H_m As Double, ByVal P_atmg As Double, ByVal T_
 'length - pipe length, m
 'T - temperature, C
 'P - pressure, atma
-Dim de, di, qg_sc, eps, length, t, P
+Dim de, di, qg_sc, eps, length, t, p
 de = dcas_mm / 1000
 di = dtub_mm / 1000
 qg_sc = Qg_scm3day
 eps = roughness
 length = H_m
 t = T_C
-P = P_atmg
+p = P_atmg
     
     'convert m3/d to scf/d
     qg_sc = qg_sc * 3.28 ^ 3
     
     Dim P_MPa As Double, P_psi As Double
-    P_MPa = P * 0.1013 'convert atma to Mpa
-    P_psi = P * 14.696 ' convert atma to psi
+    P_MPa = p * 0.1013 'convert atma to Mpa
+    P_psi = p * 14.696 ' convert atma to psi
     
     
     Dim T_K As Double, T_F As Double
@@ -2689,7 +2689,7 @@ P = P_atmg
     gradP = -0.018786 * gamma_gas * (P_psi + 14.7) * Sin(theta * Application.PI / 180) / (T_F + 460) / z + (1.2595 * 10 ^ (-11)) * f_moody * (T_F + 460) * z * gamma_gas * (qg_sc ^ 2) / (P_psi + 14.7) / dh / da ^ 4
     gradP = gradP * 0.068 / 0.3048 'convert psi/ft to atma/m
     
-    GL_dPgasPipe_atmg = P + gradP * length
+    GL_dPgasPipe_atmg = p + gradP * length
     
     
 End Function
@@ -2698,8 +2698,8 @@ End Function
 ' also found in Mischenko book
 Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As Double, gamma_g As Double, Tu_C As Double)
     
-    Dim K As Double
-    K = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
+    Dim k As Double
+    k = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
     
     Dim d_in As Double
     d_in = d_mm * 0.03937
@@ -2713,7 +2713,7 @@ Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As
     Tu_F = Tu_C / 100 * 180 + 32
     
     Dim Pd_Pu_crit As Double
-    Pd_Pu_crit = (2 / (K + 1)) ^ (K / (K - 1))
+    Pd_Pu_crit = (2 / (k + 1)) ^ (k / (k - 1))
     
     
     Dim CD As Double  ' discharge coefficient
@@ -2723,8 +2723,8 @@ Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As
     G = 32.17 'ft/sec^2
     
     Dim c0 As Double, c1 As Double, c2 As Double
-    c1 = (Pd_Pu_crit ^ (2 / K) - Pd_Pu_crit ^ (1 + 1 / K)) ^ 0.5
-    c2 = (2 * G * K / (K - 1)) ^ 0.5
+    c1 = (Pd_Pu_crit ^ (2 / k) - Pd_Pu_crit ^ (1 + 1 / k)) ^ 0.5
+    c2 = (2 * G * k / (k - 1)) ^ 0.5
     
     Dim a As Double
     a = Application.PI * d_in ^ 2 / 4 'area of choke, sq in.
@@ -2748,7 +2748,7 @@ Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As
     If Pd_Pu <= Pd_Pu_crit Then
         GL_Qgasvalve_m3day = Qg_crit * 28.31993658
     Else
-        c0 = ((Pd_Pu ^ (2 / K) - Pd_Pu ^ (1 + 1 / K))) ^ 0.5
+        c0 = ((Pd_Pu ^ (2 / k) - Pd_Pu ^ (1 + 1 / k))) ^ 0.5
         GL_Qgasvalve_m3day = Qg_crit * 28.31993658 * c0 / c1
     End If
 End Function
@@ -2757,10 +2757,10 @@ Public Function GL_Pd_gas_valve_atma(d_mm As Double, Pu_atma As Double, Qg_m3day
 Dim Qmax_m3day As Double, Qtest_m3day As Double
 Dim Pd As Double, Pd2 As Double, Pd1 As Double
 Pd = 1
-    Dim K As Double
-    K = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
+    Dim k As Double
+    k = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
     Dim Pd_Pu_crit As Double
-    Pd_Pu_crit = (2 / (K + 1)) ^ (K / (K - 1))
+    Pd_Pu_crit = (2 / (k + 1)) ^ (k / (k - 1))
 '    Dim Pd_Pu As Double
 '    Pd_Pu = Pd_atma / Pu_atma
  Dim i As Integer
@@ -2935,3 +2935,4 @@ er1:
     Err.Raise vbObjectError + 1, , "ошибка чтения закодированных данных PVT"
     
 End Function
+  

@@ -722,7 +722,7 @@ With Fluid
           
   ElseIf Param.correlation = SakharovMokhov Then
           dp_dl_arr = unf_Saharov_Mokhov_Gradient(d_m, theta_deg, rough_m, P_atma, .Qo_scm3day, .Qw_scm3day, .Qgas_scm3day, .Bo_m3m3, _
-                                    .Bw_m3m3, .Bg_m3m3, .rs_m3m3, .Muo_cP, .Muw_cP, .Mug_cP, .sigma_o_Nm, .sigma_w_Nm, .RhoOil_sckgm3, .rhoWat_sckgm3, .rhoGas_sckgm3, _
+                                    .Bw_m3m3, .Bg_m3m3, .Rs_m3m3, .Muo_cP, .Muw_cP, .Mug_cP, .sigma_o_Nm, .sigma_w_Nm, .RhoOil_sckgm3, .rhoWat_sckgm3, .rhoGas_sckgm3, _
                                     , , , betta_grav, betta_fric)
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
@@ -776,7 +776,7 @@ With Fluid
          res.v_sg_msec = v_sg_out                       ' superficial gas velosity
          res.thete_deg = theta_deg                      '
          res.roughness_m = rough_m                      '
-         res.rs_m3m3 = Fluid.rs_m3m3                    ' растворенный газ в нефти в потоке
+         res.Rs_m3m3 = Fluid.Rs_m3m3                    ' растворенный газ в нефти в потоке
          res.gasfrac = Fluid.GasFraction_d              ' расходное содержание газа в потоке
          res.Muo_cP = Fluid.Muo_cP                      ' вязкость нефть в потоке
          res.Muw_cP = Fluid.Muw_cP                      ' вязкость воды в потоке
@@ -1050,7 +1050,7 @@ Dim FlowParams_out As PIPE_FLOW_PARAMS
         c_ThetaCurve.AddPoint .md_m, .thete_deg
         c_RoughnessCurve.AddPoint .md_m, .roughness_m
         
-        c_RsCurve.AddPoint .md_m, .rs_m3m3
+        c_RsCurve.AddPoint .md_m, .Rs_m3m3
         c_gasfracCurve.AddPoint .md_m, .gasfrac
         c_muoCurve.AddPoint .md_m, .Muo_cP
         c_muwCurve.AddPoint .md_m, .Muw_cP
@@ -1119,7 +1119,7 @@ Dim i As Integer
         c_ThetaCurve.AddPoint .md_m, .thete_deg
         c_RoughnessCurve.AddPoint .md_m, .roughness_m
         
-        c_RsCurve.AddPoint .md_m, .rs_m3m3
+        c_RsCurve.AddPoint .md_m, .Rs_m3m3
         c_gasfracCurve.AddPoint .md_m, .gasfrac
         c_muoCurve.AddPoint .md_m, .Muo_cP
         c_muwCurve.AddPoint .md_m, .Muw_cP

@@ -142,7 +142,7 @@ Option Explicit
  End Property
  Public Property Get QgasInSitu_scm3day() As Double
  ' расход газа в заданных термобарических условиях приведенный к стандартным условиям
-   QgasInSitu_scm3day = (Qgas_scm3day - rs_m3m3 * Qo_scm3day)
+   QgasInSitu_scm3day = (Qgas_scm3day - Rs_m3m3 * Qo_scm3day)
    ' при барботаже будет все как надо - свободный газ уже учтен в дебите газа в стандартных условиях
  End Property
  Public Property Get Qgas_m3day() As Double
@@ -550,8 +550,8 @@ Property Let Muob_cP(muoval As Double)
         p_Muob_cP = -1 ' явный сброс значения давления насыщения после которого оно будет вычисляться по корреляции
     End If
 End Property
-Public Property Get rs_m3m3() As Double
-    rs_m3m3 = p_Rs_m3m3
+Public Property Get Rs_m3m3() As Double
+    Rs_m3m3 = p_Rs_m3m3
 End Property
 Public Property Get Bo_m3m3() As Double
     Bo_m3m3 = p_Bo_m3m3
@@ -976,26 +976,26 @@ Public Function PGasFraction_atma(FreeGas, T_C As Double, Optional Es As Double 
     Dim P2 As Double
     Dim max_iter As Integer, i As Integer
     Dim E As Double
-    Dim p_gas As Double, P As Double
+    Dim p_gas As Double, p As Double
     max_iter = 100
     E = 0.0001
     P1 = P_init_atma
     P2 = 0
 On Error GoTo err1:
     For i = 1 To max_iter
-        P = (P1 + P2) / 2
-        Call Calc_PVT(P, T_C)
+        p = (P1 + P2) / 2
+        Call Calc_PVT(p, T_C)
        ' Q_g = Ql * (1 - Wc / 100) * (Gf_1 - Calc_Rs(P11, t, Ro_o, Ro_g, PVT_cor, Gf_1)) * GasFVF_gamma(t, P12, Ro_g, PVT_cor) * (1 - Es)
        ' Q_l = Ql * ((1 - Wc / 100) * Calc_Bo(P21, t, Ro_o, Ro_g, PVT_cor, Gf_1) + Wc / 100 * Calc_Bw(P22, t, , PVT_cor))
         p_gas = GasFraction_d(Es)
         If Abs(p_gas - FreeGas) <= E Then Exit For
         If p_gas > FreeGas Then
-           P2 = P
+           P2 = p
         Else
-           P1 = P
+           P1 = p
         End If
     Next
-    PGasFraction_atma = P
+    PGasFraction_atma = p
     Exit Function
 err1:
     PGasFraction_atma = 0

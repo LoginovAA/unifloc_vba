@@ -327,7 +327,7 @@ Public Type PIPE_FLOW_PARAMS
   thete_deg As Double
   roughness_m As Double
   
-  rs_m3m3 As Double         ' растворенный газ в нефти в потоке
+  Rs_m3m3 As Double         ' растворенный газ в нефти в потоке
   gasfrac As Double         ' расходное содержание газа в потоке
   
   Muo_cP As Double          ' вязкость нефть в потоке
@@ -406,8 +406,8 @@ Public Function SubtractPT(PT1 As PTtype, PT2 As PTtype) As PTtype
     SubtractPT.P_atma = PT1.P_atma - PT2.P_atma
     SubtractPT.T_C = PT1.T_C - PT2.T_C
 End Function
-Public Function SetPT(ByVal P As Double, ByVal t As Double) As PTtype
-    SetPT.P_atma = P
+Public Function SetPT(ByVal p As Double, ByVal t As Double) As PTtype
+    SetPT.P_atma = p
     SetPT.T_C = t
 End Function
 Public Sub RangeChange(rng1, sheet, target)

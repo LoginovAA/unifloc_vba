@@ -13,9 +13,9 @@ Function unf_DeadOilViscosity_Standing(Temperature_K As Variant, gamma_oil As Va
         
         unf_DeadOilViscosity_Standing = (0.32 + 1.8 * 10 ^ 7 / (141.5 / gamma_oil - 131.5) ^ 4.53) * (360 / (1.8 * Temperature_K - 260)) ^ (10 ^ (0.43 + 8.33 / (141.5 / gamma_oil - 131.5)))
 End Function
-Function unf_Compressibility_Oil_VB(rs_m3m3 As Variant, gamma_gas As Variant, Temperature_K As Variant, gamma_oil As Variant, Pressure_MPa As Variant)
+Function unf_Compressibility_Oil_VB(Rs_m3m3 As Variant, gamma_gas As Variant, Temperature_K As Variant, gamma_oil As Variant, Pressure_MPa As Variant)
         
-        unf_Compressibility_Oil_VB = (28.1 * rs_m3m3 + 30.6 * Temperature_K - 1180 * gamma_gas + 1784 / gamma_oil - 10910) / (100000 * Pressure_MPa)
+        unf_Compressibility_Oil_VB = (28.1 * Rs_m3m3 + 30.6 * Temperature_K - 1180 * gamma_gas + 1784 / gamma_oil - 10910) / (100000 * Pressure_MPa)
 End Function
 Function unf_Bubblepoint_Standing(rsb_m3m3 As Variant, gamma_gas As Variant, Temperature_K As Variant, gamma_oil As Variant)
         
@@ -42,11 +42,11 @@ Function unf_Bubblepoint_Standing(rsb_m3m3 As Variant, gamma_gas As Variant, Tem
            
         End If
 End Function
-Function unf_FVF_Saturated_Oil_Standing(rs_m3m3 As Variant, gamma_gas As Variant, Temperature_K As Variant, gamma_oil As Variant)
-   Dim f As Double
+Function unf_FVF_Saturated_Oil_Standing(Rs_m3m3 As Variant, gamma_gas As Variant, Temperature_K As Variant, gamma_oil As Variant)
+   Dim F As Double
    
-        f = 5.615 * rs_m3m3 * (gamma_gas / gamma_oil) ^ 0.5 + 2.25 * Temperature_K - 575
-        unf_FVF_Saturated_Oil_Standing = 0.972 + 0.000147 * f ^ 1.175
+        F = 5.615 * Rs_m3m3 * (gamma_gas / gamma_oil) ^ 0.5 + 2.25 * Temperature_K - 575
+        unf_FVF_Saturated_Oil_Standing = 0.972 + 0.000147 * F ^ 1.175
 End Function
 Function unf_FVF_Above_Bubblepoint_Pressure_Standing(Pressure_MPa As Variant, Bubblepoint_Pressure_MPa As Variant, Oil_Compressibility As Variant, FVF_Saturated_Oil As Variant)
         If Pressure_MPa <= Bubblepoint_Pressure_MPa Then
@@ -55,10 +55,10 @@ Function unf_FVF_Above_Bubblepoint_Pressure_Standing(Pressure_MPa As Variant, Bu
             unf_FVF_Above_Bubblepoint_Pressure_Standing = FVF_Saturated_Oil * Exp(Oil_Compressibility * (Bubblepoint_Pressure_MPa - Pressure_MPa))
         End If
 End Function
-Function unf_Oil_Viscosity_Standing(rs_m3m3 As Variant, Dead_oil_viscosity As Variant, Pressure_MPa As Variant, Bubblepoint_Pressure_MPa As Variant)
+Function unf_Oil_Viscosity_Standing(Rs_m3m3 As Variant, Dead_oil_viscosity As Variant, Pressure_MPa As Variant, Bubblepoint_Pressure_MPa As Variant)
     Dim a As Double, B As Double
-    a = 5.6148 * rs_m3m3 * (0.1235 * 10 ^ (-5) * rs_m3m3 - 0.00074)
-    B = 0.68 / 10 ^ (0.000484 * rs_m3m3) + 0.25 / 10 ^ (0.006176 * rs_m3m3) + 0.062 / 10 ^ (0.021 * rs_m3m3)
+    a = 5.6148 * Rs_m3m3 * (0.1235 * 10 ^ (-5) * Rs_m3m3 - 0.00074)
+    B = 0.68 / 10 ^ (0.000484 * Rs_m3m3) + 0.25 / 10 ^ (0.006176 * Rs_m3m3) + 0.062 / 10 ^ (0.021 * Rs_m3m3)
     
     unf_Oil_Viscosity_Standing = 10 ^ a * Dead_oil_viscosity ^ B
     
@@ -66,8 +66,8 @@ Function unf_Oil_Viscosity_Standing(rs_m3m3 As Variant, Dead_oil_viscosity As Va
         unf_Oil_Viscosity_Standing = unf_Oil_Viscosity_Standing + 0.14504 * (Pressure_MPa - Bubblepoint_Pressure_MPa) * (0.024 * unf_Oil_Viscosity_Standing ^ 1.6 + 0.038 * unf_Oil_Viscosity_Standing ^ 0.56)
     End If
 End Function
-Function unf_Density_Oil_Standing(rs_m3m3 As Variant, gamma_gas As Variant, gamma_oil As Variant, Pressure_MPa As Variant, FVF_m3m3 As Variant, BP_Pressure_MPa As Variant, Compressibility_1MPa As Variant)
-     unf_Density_Oil_Standing = (1000 * gamma_oil + 1.224 * gamma_gas * rs_m3m3) / FVF_m3m3
+Function unf_Density_Oil_Standing(Rs_m3m3 As Variant, gamma_gas As Variant, gamma_oil As Variant, Pressure_MPa As Variant, FVF_m3m3 As Variant, BP_Pressure_MPa As Variant, Compressibility_1MPa As Variant)
+     unf_Density_Oil_Standing = (1000 * gamma_oil + 1.224 * gamma_gas * Rs_m3m3) / FVF_m3m3
      If Pressure_MPa > BP_Pressure_MPa Then
         unf_Density_Oil_Standing = unf_Density_Oil_Standing * Exp(Compressibility_1MPa * (Pressure_MPa - BP_Pressure_MPa))
      End If
@@ -198,8 +198,8 @@ If Pr < 1 Then
         unf_GOR_VelardeSI = Rsr * Rsb_m3_m3
 End If
 End Function
-Function unf_FVF_McCainSI(rs_m3m3 As Variant, gamma_gas As Variant, STO_density_kg_m3 As Variant, Reservoir_oil_density_kg_m3 As Variant)
-        unf_FVF_McCainSI = (STO_density_kg_m3 + 1.22117 * rs_m3m3 * gamma_gas) / Reservoir_oil_density_kg_m3
+Function unf_FVF_McCainSI(Rs_m3m3 As Variant, gamma_gas As Variant, STO_density_kg_m3 As Variant, Reservoir_oil_density_kg_m3 As Variant)
+        unf_FVF_McCainSI = (STO_density_kg_m3 + 1.22117 * Rs_m3m3 * gamma_gas) / Reservoir_oil_density_kg_m3
 End Function
 Function unf_Density_McCainSI(Pressure_MPa As Variant, gamma_gas As Variant, Temperature_K As Variant, _
                             gamma_oil As Variant, Rs_m3_m3 As Variant, BP_Pressure_MPa As Variant, _
@@ -280,10 +280,10 @@ Function unf_OilViscosity_Vasquez_Beggs(Saturated_oil_viscosity As Variant, Pres
         M = c1 * Pressure_MPa ^ c2 * Exp(c3 + c4 * Pressure_MPa)
         unf_OilViscosity_Vasquez_Beggs = Saturated_oil_viscosity * (Pressure_MPa / BP_Pressure_MPa) ^ M
 End Function
-Function unf_OilViscosity_Beggs_Robinson_Vasques_Beggs(rs_m3m3 As Variant, GOR_pb_m3m3 As Variant, Pressure_MPa As Variant, _
+Function unf_OilViscosity_Beggs_Robinson_Vasques_Beggs(Rs_m3m3 As Variant, GOR_pb_m3m3 As Variant, Pressure_MPa As Variant, _
                                                    BP_Pressure_MPa As Variant, Dead_oil_viscosity As Variant)
  If (Pressure_MPa < BP_Pressure_MPa) Then 'saturated
-   unf_OilViscosity_Beggs_Robinson_Vasques_Beggs = unf_SaturatedOilViscosity_Beggs_Robinson(rs_m3m3, Dead_oil_viscosity)
+   unf_OilViscosity_Beggs_Robinson_Vasques_Beggs = unf_SaturatedOilViscosity_Beggs_Robinson(Rs_m3m3, Dead_oil_viscosity)
  Else 'undersaturated
    unf_OilViscosity_Beggs_Robinson_Vasques_Beggs = unf_OilViscosity_Vasquez_Beggs( _
      unf_SaturatedOilViscosity_Beggs_Robinson(GOR_pb_m3m3, Dead_oil_viscosity), Pressure_MPa, BP_Pressure_MPa)
@@ -595,11 +595,11 @@ Function unf_Calc_Bw_m3m3(Pressure_MPa As Double, Temperature_K As Double)
 '
 '   ' rnt 20150312 end
    
- Dim f As Double, psi As Double, dvwp As Double, dvwt As Double
- f = 1.8 * Temperature_K - 460
+ Dim F As Double, psi As Double, dvwp As Double, dvwt As Double
+ F = 1.8 * Temperature_K - 460
  psi = Pressure_MPa * 145.04
- dvwp = -1.95301 * 10 ^ (-9) * psi * f - 1.72834 * 10 ^ (-13) * psi ^ 2 * f - 3.58922 * 10 ^ (-7) * psi - 2.25341 * 10 ^ (-10) * psi ^ 2
- dvwt = -1.0001 * 10 ^ (-2) + 1.33391 * 10 ^ (-4) * f + 5.50654 * 10 ^ (-7) * f ^ 2
+ dvwp = -1.95301 * 10 ^ (-9) * psi * F - 1.72834 * 10 ^ (-13) * psi ^ 2 * F - 3.58922 * 10 ^ (-7) * psi - 2.25341 * 10 ^ (-10) * psi ^ 2
+ dvwt = -1.0001 * 10 ^ (-2) + 1.33391 * 10 ^ (-4) * F + 5.50654 * 10 ^ (-7) * F ^ 2
  unf_Calc_Bw_m3m3 = (1 + dvwp) * (1 + dvwt)
 End Function
 ' Water density at standard conditions
@@ -631,7 +631,7 @@ End Function
 Function unf_Calc_GWR_m3m3(Pressure_MPa As Double, Temperature_K As Double, Salinity_ppm As Double)
 ' rnt 20150303 надо найти источник корреляции - скорее всего крига Брилла по многофазному потоку
 ' 201503 не используется в расчетах
- Dim f As Double, psi As Double, wpTDS As Double, a As Double, B As Double, c As Double, Rswws As Double
+ Dim F As Double, psi As Double, wpTDS As Double, a As Double, B As Double, c As Double, Rswws As Double
     
     ' rnt 20150319 проверка диапазонов значений
     
@@ -647,21 +647,21 @@ Function unf_Calc_GWR_m3m3(Pressure_MPa As Double, Temperature_K As Double, Sali
 '                                                        "соленость вне диапазона", "calc_GWR", True, error_probability)
    
    ' rnt 20150319 end
-    f = 1.8 * Temperature_K - 460
+    F = 1.8 * Temperature_K - 460
     psi = Pressure_MPa * 145.04
     wpTDS = Salinity_ppm / (10000)
-    a = 8.15839 - 0.0612265 * f + 1.91663 * 10 ^ (-4) * f ^ 2 - 2.1654 * 10 ^ (-7) * f ^ 3
-    B = 1.01021 * 10 ^ (-2) - 7.44241 * 10 ^ (-5) * f + 3.05553 * 10 ^ (-7) * f ^ 2 - 2.94883 * 10 ^ (-10) * f ^ 3
-    c = (-9.02505 + 0.130237 * f - 8.53425 * 10 ^ (-4) * f ^ 2 + 2.34122 * 10 ^ (-6) * f ^ 3 - 2.37049 * 10 ^ (-9) * f ^ 4) * 10 ^ (-7)
+    a = 8.15839 - 0.0612265 * F + 1.91663 * 10 ^ (-4) * F ^ 2 - 2.1654 * 10 ^ (-7) * F ^ 3
+    B = 1.01021 * 10 ^ (-2) - 7.44241 * 10 ^ (-5) * F + 3.05553 * 10 ^ (-7) * F ^ 2 - 2.94883 * 10 ^ (-10) * F ^ 3
+    c = (-9.02505 + 0.130237 * F - 8.53425 * 10 ^ (-4) * F ^ 2 + 2.34122 * 10 ^ (-6) * F ^ 3 - 2.37049 * 10 ^ (-9) * F ^ 4) * 10 ^ (-7)
     Rswws = (a + B * psi + c * psi ^ 2) * 0.1781
-    unf_Calc_GWR_m3m3 = Rswws * 10 ^ (-0.0840655 * wpTDS * f ^ (-0.285854))
+    unf_Calc_GWR_m3m3 = Rswws * 10 ^ (-0.0840655 * wpTDS * F ^ (-0.285854))
 End Function
 ' Water compressibility
 Function unf_Calc_WaterCompressibility_atma(Pressure_MPa As Double, Temperature_K As Double, Salinity_ppm As Double)
 ' http://petrowiki.org/Produced_water_compressibility
 ' 201503 не используется в расчетах
  
- Dim f As Double, psi As Double
+ Dim F As Double, psi As Double
  
    ' rnt 20150319 проверка диапазонов значений
     
@@ -678,7 +678,7 @@ Function unf_Calc_WaterCompressibility_atma(Pressure_MPa As Double, Temperature_
    
    ' rnt 20150319 end
  
- f = 1.8 * Temperature_K - 460
+ F = 1.8 * Temperature_K - 460
  psi = Pressure_MPa * 145.04
- unf_Calc_WaterCompressibility_atma = 0.1 * 145.04 / (7.033 * psi + 0.5415 * Salinity_ppm - 537 * f + 403300)
+ unf_Calc_WaterCompressibility_atma = 0.1 * 145.04 / (7.033 * psi + 0.5415 * Salinity_ppm - 537 * F + 403300)
 End Function

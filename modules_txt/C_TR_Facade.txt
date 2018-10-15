@@ -319,11 +319,11 @@ End Property
    GOR_m3m3 = readByName(rng_GOR_m3m3, i)
  End Property
 '============================================
- Public Property Let rs_m3m3(i, val)
+ Public Property Let Rs_m3m3(i, val)
     Call writeByName(rng_Rs_m3m3, i, val)
  End Property
- Public Property Get rs_m3m3(i)
-   rs_m3m3 = readByName(rng_Rs_m3m3, i)
+ Public Property Get Rs_m3m3(i)
+   Rs_m3m3 = readByName(rng_Rs_m3m3, i)
  End Property
 '============================================
  Public Property Let Pb_atma(i, val)

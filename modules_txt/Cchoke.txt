@@ -25,8 +25,8 @@ Public Tchoke_C As Double
 ' флюид протекающий через штуцер
 Public Fluid As New CPVT
 ' параметры модели штуцера
-Private K As Double '  = 0.826,'K - Discharge coefficient (optional, default  is 0.826)
-Private f As Double ' = 1.25,'F - Ratio of gas spec. heat capacity at constant pressure to that at constant volume (optional, default  is 1.4)
+Private k As Double '  = 0.826,'K - Discharge coefficient (optional, default  is 0.826)
+Private F As Double ' = 1.25,'F - Ratio of gas spec. heat capacity at constant pressure to that at constant volume (optional, default  is 1.4)
 Private C_vw As Double ' = 4176'Cvw - water specific heat capacity (J/kg K)(optional, default  is 4176)
 Private kCalibration As Double
 ' кривые для текущих характеристик штуцера
@@ -103,8 +103,8 @@ End Property
 '    p_Plin_atma = val
 'End Property
 Private Sub Class_Initialize()
- K = 0.826
- f = 1.25
+ k = 0.826
+ F = 1.25
  C_vw = 4176
  kCalibration = 1
  
@@ -192,7 +192,7 @@ Dim T_C As Double
 Dim p_av As Double
 Dim t_av As Double
 'PVT properties
-Dim rs_m3m3 As Double
+Dim Rs_m3m3 As Double
 Dim Bo_m3m3 As Double
 Dim z As Double
 Dim Bg_m3m3 As Double
@@ -208,9 +208,9 @@ Dim void As Double
 z = 1
 'Calculate specific heat capacities
 c_vo = C_vw * (0.238 + 0.302 / Fluid.gamma_o + (0.0064 + 0.003 / Fluid.gamma_o) * t_u)
-c_vg = z * const_r / (Fluid.m_g_kgmol * (f - 1))
+c_vg = z * const_r / (Fluid.m_g_kgmol * (F - 1))
 'Calculate polytropic exponent
-N = (f_g * f * c_vg + f_o * c_vo + f_w * C_vw) / (f_g * c_vg + f_o * c_vo + f_w * C_vw)
+N = (f_g * F * c_vg + f_o * c_vo + f_w * C_vw) / (f_g * c_vg + f_o * c_vo + f_w * C_vw)
 'Calculate choke throat temperature
 T_C = (t_u + 273) * P_r ^ (1 - 1 / N) - 273
 p_TchokeThroat_C = T_C
@@ -219,17 +219,17 @@ p_av = (p_u + P_r * p_u) / 2
 t_av = (t_u + T_C) / 2
 p_TchokeAv_C = t_av
 Call Fluid.Calc_PVT(p_av, t_av)
-rs_m3m3 = min(Fluid.Rp_m3m3, rs_m3m3)
+Rs_m3m3 = min(Fluid.Rp_m3m3, Rs_m3m3)
 'Recalculate specific heat capacities
 c_vo = C_vw * (0.238 + 0.302 / Fluid.gamma_o + (0.0064 + 0.003 / Fluid.gamma_o) * t_av)
-c_vg = z * const_r / (Fluid.m_g_kgmol * (f - 1))
+c_vg = z * const_r / (Fluid.m_g_kgmol * (F - 1))
 'Recalculate polytropic exponent
-N = (f_g * f * c_vg + f_o * c_vo + f_w * C_vw) / (f_g * c_vg + f_o * c_vo + f_w * C_vw)
+N = (f_g * F * c_vg + f_o * c_vo + f_w * C_vw) / (f_g * c_vg + f_o * c_vo + f_w * C_vw)
 If P_r = 0 Then
   P_r = 0.000001
 End If
 'Calculate auxilary values
-lambda = (f_g + (f_g * c_vg + f_o * c_vo + f_w * C_vw) / (c_vg * (f - 1)))
+lambda = (f_g + (f_g * c_vg + f_o * c_vo + f_w * C_vw) / (c_vg * (F - 1)))
 betta = f_g / N * P_r ^ (-1 - 1 / N)
 gamma = f_g + alpha
 delta = f_g * P_r ^ (-1 / N) + alpha
@@ -241,7 +241,7 @@ wi_calc = 27500000# * a_c * (2 * p_u * rho_gu / delta ^ 2 * (lambda * (1 - P_r ^
 wi_deriv = (2 * lambda * (1 - P_r ^ (1 - 1 / N)) + 2 * alpha * (1 - P_r)) * betta - _
     delta * (1 - (a_r * gamma / delta) ^ 2) * (lambda * (1 - 1 / N) * P_r ^ (-1 / N) + alpha)
 End Function
-Public Function Calc_Choke_MaxQliq_m3day(ByVal p_sn As Double, _
+Public Function Calc_Choke_MaxQliq_m3day(ByVal P_sn As Double, _
                                ByVal t_u As Double, Optional Calc_p_down As Integer = 0) As Double
        
     Dim Max_Ql As Double
@@ -262,7 +262,7 @@ Public Function Calc_Choke_MaxQliq_m3day(ByVal p_sn As Double, _
         Max_Ql = min(1500, Max_Ql)
     End If
     If (Calc_p_down = 1) Then
-        Max_Ql = Choke_liquid_rate(p_sn, 0, t_u)
+        Max_Ql = Choke_liquid_rate(P_sn, 0, t_u)
     End If
     Calc_Choke_MaxQliq_m3day = Max_Ql
 End Function
@@ -282,7 +282,7 @@ End Function
 '        MsgBox "Неккоректно задан дебит нефти"
 '    End If
 'End Function
-Public Function Calc_Choke_MaxRp_m3m3(ByVal p_sn As Double, _
+Public Function Calc_Choke_MaxRp_m3m3(ByVal P_sn As Double, _
                                ByVal t_u As Double, Optional Calc_p_down As Integer = 0) As Variant
 ' Функция находит значение максимального газового фактора при даном дебите нефти и данном давлении на входе,
 ' при котором давление на выходе становится нулевым
@@ -293,7 +293,7 @@ Public Function Calc_Choke_MaxRp_m3m3(ByVal p_sn As Double, _
     Dim B As Double ' вверхняя граница отрезка, в которой находится значение максимального газового фактора
     Dim P_d As Double
     Dim eps As Double
-    eps = p_sn * 0.001
+    eps = P_sn * 0.001
     Dim counter As Integer
     counter = 0
     Dim max_iters As Integer
@@ -315,7 +315,7 @@ Public Function Calc_Choke_MaxRp_m3m3(ByVal p_sn As Double, _
     End If
     
     If (Calc_p_down = 1) Then
-        P_d = Calc_Choke_P(SetPT(p_sn, t_u), Calc_p_down).P_atma
+        P_d = Calc_Choke_P(SetPT(P_sn, t_u), Calc_p_down).P_atma
                                             
         If P_d < 0 Then
             Calc_Choke_MaxRp_m3m3 = "Невозможен"
@@ -324,14 +324,14 @@ Public Function Calc_Choke_MaxRp_m3m3(ByVal p_sn As Double, _
             Do
                 i = 2 * i
                 B = Fluid.Rp_m3m3 * i
-                P_d = Calc_Choke_P(SetPT(p_sn, t_u), Calc_p_down).P_atma
+                P_d = Calc_Choke_P(SetPT(P_sn, t_u), Calc_p_down).P_atma
             Loop Until P_d < 0
             a = i * Fluid.Rp_m3m3 / 2
             
             Do
                 counter = counter + 1
                 Max_Rp = (a + B) / 2
-                P_d = Calc_Choke_P(SetPT(p_sn, t_u), Calc_p_down).P_atma
+                P_d = Calc_Choke_P(SetPT(P_sn, t_u), Calc_p_down).P_atma
                 If P_d > 0 Then
                     a = Max_Rp
                 Else
@@ -344,8 +344,8 @@ Public Function Calc_Choke_MaxRp_m3m3(ByVal p_sn As Double, _
 End Function
 Public Function Calc_Choke_P(PT As PTtype, Optional Calc_p_down As Integer = 0) As PTtype
 'Function calculates end node pressure for choke (weather upstream or downstream)
-Dim p_sn As Double, t_u As Double
-p_sn = PT.P_atma
+Dim P_sn As Double, t_u As Double
+P_sn = PT.P_atma
 t_u = PT.T_C
 Dim P_en As Double
 Dim counter As Double
@@ -367,8 +367,8 @@ If (Calc_p_down = 0) Then 'Calculate upstream pressure given downstream
       ' ищем давление на входе заведомо превышающее необходимое для обеспечения заданного потока
       counter = counter + 1
       i = 2 * i
-      P_en_max = p_sn * i
-      q_l = Choke_liquid_rate(P_en_max, p_sn, t_u)
+      P_en_max = P_sn * i
+      q_l = Choke_liquid_rate(P_en_max, P_sn, t_u)
     Loop Until q_l > Fluid.Qliq_scm3day Or counter > max_iters
     
     If q_l <= Fluid.Qliq_scm3day Then   ' значит поиск дебита не увенчался успехом
@@ -376,7 +376,7 @@ If (Calc_p_down = 0) Then 'Calculate upstream pressure given downstream
     End If
     
     ' определим нижнюю границу поиска давления
-    P_en_min = i * p_sn / 2
+    P_en_min = i * P_sn / 2
     
     counter = 0
     Do
@@ -386,7 +386,7 @@ If (Calc_p_down = 0) Then 'Calculate upstream pressure given downstream
         
         counter = counter + 1
         P_en = (P_en_min + P_en_max) / 2
-        q_l = Choke_liquid_rate(P_en, p_sn, t_u)
+        q_l = Choke_liquid_rate(P_en, P_sn, t_u)
         If q_l > Fluid.Qliq_scm3day Then
             P_en_max = P_en
         Else
@@ -403,7 +403,7 @@ Dim p_cr As Double
 If (Calc_p_down = 1) Then 'Calculate downstream pressure given upstream
     'Solve for upstream pressure
     'Calculate critical oil rate
-    q_l = Choke_liquid_rate(p_sn, 0, t_u)
+    q_l = Choke_liquid_rate(P_sn, 0, t_u)
     If isGreater(Fluid.Qliq_scm3day, q_l) Then 'Given oil rate can't be archieved
         P_en = -1
     Else
@@ -415,20 +415,20 @@ If (Calc_p_down = 1) Then 'Calculate downstream pressure given upstream
             counter = 0
             Do
                 i = 2 * i
-                P_en_min = p_sn / i
-                q_l = Choke_liquid_rate(p_sn, P_en_min, t_u)
+                P_en_min = P_sn / i
+                q_l = Choke_liquid_rate(P_sn, P_en_min, t_u)
             Loop Until q_l > Fluid.Qliq_scm3day Or counter > max_iters
             
             If q_l <= Fluid.Qliq_scm3day Then   ' значит поиск дебита не увенчался успехом
                 addLogMsg "Calc_Choke_P(Calc_p_down = 1): не удалось найти нижнюю границу давления на входе обеспечивающее заданный дебит = " & Format(Fluid.Qliq_scm3day, "####0.00"), msgError
             End If
             
-            P_en_max = 2 * p_sn / i
+            P_en_max = 2 * P_sn / i
             counter = 0
             Do
                 counter = counter + 1
                 P_en = (P_en_min + P_en_max) / 2
-                q_l = Choke_liquid_rate(p_sn, P_en, t_u)
+                q_l = Choke_liquid_rate(P_sn, P_en, t_u)
                 If q_l > Fluid.Qliq_scm3day Then
                     P_en_min = P_en
                 Else
@@ -472,7 +472,7 @@ Dim void As Double
 'End If
 Call Fluid.Calc_PVT(p_u, t_u) ' , Fluid.gamma_o, Fluid.gamma_g, Fluid.PVT_CORRELATION, void, r_su, b_ou, void, Z_u, _
                  ' b_gu, void, b_wu, void, Fluid.Rsb_m3m3, Fluid.Pb_atma, Fluid.Bo_m3m3)
-r_su = Fluid.rs_m3m3
+r_su = Fluid.Rs_m3m3
 b_ou = Fluid.Bo_m3m3
 Z_u = Fluid.z
 b_gu = Fluid.Bg_m3m3
@@ -543,7 +543,7 @@ Else 'liquid flow
     p_ri = 0
     v_si = 5000
 End If
-p_Qlmax_m3day = K * w_i * f_o / Fluid.RhoOil_sckgm3 + K * w_i * f_w / Fluid.rhoWat_sckgm3
+p_Qlmax_m3day = k * w_i * f_o / Fluid.RhoOil_sckgm3 + k * w_i * f_w / Fluid.rhoWat_sckgm3
 'Calculate recovered downstream pressure at critical pressure ratio
 Dim p_dcr As Double
 p_dcr = p_u * (p_ri * (1 - (Dchoke_m / Ddown_m) ^ 1.85) + (Dchoke_m / Ddown_m) ^ 1.85)
@@ -556,7 +556,7 @@ p_ra = max(p_ri, p_co / p_u)
 w_i = wi_calc(p_ra, p_u, t_u, rho_gu, f_o, f_g, f_w, alpha, wi_der1, N)
 'Calculate isentropic mass flow rate
 Dim W As Double
-W = K * w_i * kCalibration
+W = k * w_i * kCalibration
 'Choke_liquid_rate = w * f_o / rho_osc / c_ql(Units) + w * f_w / rho_wsc / c_ql(Units)
 Choke_liquid_rate = W * f_o / Fluid.RhoOil_sckgm3 + W * f_w / Fluid.rhoWat_sckgm3
 'Asign mass flow rate
@@ -789,3 +789,4 @@ End Sub
     
     kCalibration = chk.KCalibr
  End Function
+ 

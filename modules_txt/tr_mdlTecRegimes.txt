@@ -140,7 +140,7 @@ Dim HPerfAbs As Double ' абсолютное значение глубины верхних дыр перфорации
 Dim HpumpAbs As Double ' абсолютное значение глубины подвеса насоса
 Dim HdinAbs As Double ' абсолютное значение глубины динамического уровня
 Dim Qo_m3day As Double   ' объемный расход нефти
-Dim rs_m3m3 As Double   ' объемный газовый фактор
+Dim Rs_m3m3 As Double   ' объемный газовый фактор
 Dim Qw_m3day As Double   ' объемный расход воды
 Dim wc_d As Double     ' обводненность  в долях
 Dim Tav As Double      ' температура в затрубе средняя, C
@@ -166,7 +166,7 @@ Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
     wc_d = wc_perc / 100
     Qw_m3day = Qliq_sm3day * wc_d
     Qo_m3day = Qliq_sm3day * (1 - wc_d)
-    rs_m3m3 = rp_m3t * gamma_oil
+    Rs_m3m3 = rp_m3t * gamma_oil
     ' пересчитаем абсолютные значения из измеренных
     HPerfAbs = Hvd_m - Udl_Hvd_m
     HpumpAbs = Hpump_m * (1 - Udl_Hvd_m / Hvd_m) ' предполагаем, что удлинение на насос не задано
@@ -175,12 +175,12 @@ Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
     If Not IsEmpty(Udl_Hdyn_m) And Udl_Hdyn_m > 0 Then HdinAbs = Hpump_m - Udl_Hdyn_m
     ' вычислим дебит газа для расчета выше насоса
     If Qg_mes_sm3day <= 0 Then
-        Qgsc = Qo_m3day * rs_m3m3 * Ksep_fr
-        tr_Pwf_calc_atma = Pwf_Qgmes_atma(Qgsc, HPerfAbs, HpumpAbs, HdinAbs, rs_m3m3, Pb_atma_calc, Pcas_atmg, _
+        Qgsc = Qo_m3day * Rs_m3m3 * Ksep_fr
+        tr_Pwf_calc_atma = Pwf_Qgmes_atma(Qgsc, HPerfAbs, HpumpAbs, HdinAbs, Rs_m3m3, Pb_atma_calc, Pcas_atmg, _
                                 Qo_m3day, bo_m3m3_calc, gamma_oil, Qw_m3day, gamma_wat, dcas_mm, _
                                 tr_HydCor, dtub_mm, Bw_m3m3, Tav + 273, Zav, False)
     Else
-        tr_Pwf_calc_atma = Pwf_Qgmes_atma(Qg_mes_sm3day, HPerfAbs, HpumpAbs, HdinAbs, rs_m3m3, Pb_atma_calc, Pcas_atmg, _
+        tr_Pwf_calc_atma = Pwf_Qgmes_atma(Qg_mes_sm3day, HPerfAbs, HpumpAbs, HdinAbs, Rs_m3m3, Pb_atma_calc, Pcas_atmg, _
                                 Qo_m3day, bo_m3m3_calc, gamma_oil, Qw_m3day, gamma_wat, dcas_mm, _
                                 tr_HydCor, dtub_mm, Bw_m3m3, Tav + 273, Zav, True)
     End If
@@ -228,7 +228,7 @@ Dim PinD As Double ' безразмерное давление на приеме насоса
 Dim HPerfAbs As Double ' абсолютное значение глубины верхних дыр перфорации
 Dim HpumpAbs As Double ' абсолютное значение глубины подвеса насоса
 Dim Qo_vol As Double   ' объемный расход нефти
-Dim rs_m3m3 As Double   ' объемный газовый фактор
+Dim Rs_m3m3 As Double   ' объемный газовый фактор
 Dim Qw_vol As Double   ' объемный расход воды
 Dim wc_perc_d As Double     ' обводненность  в долях
 Dim Tav As Double      ' температура в затрубе средняя, C
@@ -252,13 +252,13 @@ Dim err_msg As String
     wc_perc_d = wc_perc / 100
     Qw_vol = Qliq_sm3day * wc_perc_d
     Qo_vol = Qliq_sm3day * (1 - wc_perc_d)
-    rs_m3m3 = rp_m3t * gamma_oil
+    Rs_m3m3 = rp_m3t * gamma_oil
     ' пересчитаем абсолютные значения из измеренных
     HPerfAbs = Hvd_m - Udl_Hvd_m
     HpumpAbs = Hpump_m * (1 - Udl_Hvd_m / Hvd_m) ' предполагаем, что удлинение на насос не задано
     If Not IsEmpty(Udl_Hpump_m) And Udl_Hpump_m > 0 Then HpumpAbs = Hpump_m - Udl_Hpump_m
     ' вычислим дебит газа для расчета выше насоса
-    tr_Pwf_calc_Pin_atma = Pwf_Pin_atma(Pin_atmg, HPerfAbs, HpumpAbs, rs_m3m3, Pb_atma_calc, _
+    tr_Pwf_calc_Pin_atma = Pwf_Pin_atma(Pin_atmg, HPerfAbs, HpumpAbs, Rs_m3m3, Pb_atma_calc, _
                                 Qo_vol, bo_m3m3_calc, gamma_oil, Qw_vol, gamma_wat, dcas_mm, _
                                 tr_HydCor, Bw_m3m3, Tav + 273, Zav)
 End Function
@@ -314,7 +314,7 @@ Dim HPerfAbs As Double ' абсолютное значение глубины верхних дыр перфорации
 Dim HpumpAbs As Double ' абсолютное значение глубины подвеса насоса
 Dim HdinAbs As Double ' абсолютное значение глубины динамического уровня
 Dim Qo_m3day As Double   ' объемный расход нефти
-Dim rs_m3m3 As Double   ' объемный газовый фактор
+Dim Rs_m3m3 As Double   ' объемный газовый фактор
 Dim Qw_m3day As Double   ' объемный расход воды
 Dim wc_perc_d As Double     ' обводненность  в долях
 Dim Tav As Double      ' температура в затрубе средняя, К
@@ -337,7 +337,7 @@ Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
     wc_perc_d = wc_perc / 100
     Qw_m3day = Qliq_sm3day * wc_perc_d
     Qo_m3day = Qliq_sm3day * (1 - wc_perc_d)
-    rs_m3m3 = rs_m3t * gamma_oil
+    Rs_m3m3 = rs_m3t * gamma_oil
     ' пересчитаем абсолютные значения из измеренных
     HPerfAbs = Hvd_m - Udl_Hvd_m
     HpumpAbs = Hpump_m * (1 - Udl_Hvd_m / Hvd_m) ' предполагаем, что удлинение на насос не задано
@@ -346,7 +346,7 @@ Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
     If Not IsEmpty(Udl_Hdyn_m) And Udl_Hdyn_m > 0 Then HdinAbs = Hpump_m - Udl_Hdyn_m
     ' вычислим дебит газа для расчета выше насоса
     If Qg_mes_sm3day <= 0 Then
-        Qgsc = Qo_m3day * rs_m3m3 * Ksep_fr
+        Qgsc = Qo_m3day * Rs_m3m3 * Ksep_fr
         tr_Ppump_calc_atma = Pin_Qgmes_atma(Qgsc, HpumpAbs, HdinAbs, Pb_atma_calc, Pcas_atmg, _
                            bo_m3m3_calc, gamma_oil, dcas_mm, _
                            tr_HydCor, dtub_mm, Tav + 273, Zav, False)
@@ -739,7 +739,7 @@ End If
                     
 CheckErrors = error
 End Function
-Private Sub corelations_for_high_GOR(ByVal rs_m3m3 As Double, ByVal Tres_C As Double, _
+Private Sub corelations_for_high_GOR(ByVal Rs_m3m3 As Double, ByVal Tres_C As Double, _
 ByVal DensityOil As Double, ByVal gamma_gas As Double, ByVal Pb_atma As Double, ByVal Bo_m3m3 As Double, _
 ByRef Pb_atma_calc As Double, ByRef bo_m3m3_calc As Double)
 ' Проверка, если газовый фактор большой, то больше доверяет газовому фактору
@@ -750,9 +750,9 @@ ByRef Pb_atma_calc As Double, ByRef bo_m3m3_calc As Double)
    'определение давления насыщения и объемного коэффициента нефти по корреляциям для ГФ>200
     Pb_atma_calc = Pb_atma
     bo_m3m3_calc = Bo_m3m3
-    If rs_m3m3 > 200 Then
-        Pb_atma_calc = PVT_Pb_atma(Tres_C, rsb_m3m3:=rs_m3m3, gamma_oil:=DensityOil, gamma_gas:=gamma_gas)
-        bo_m3m3_calc = PVT_Bo_m3m3(Pb_atma, Tres_C, rsb_m3m3:=rs_m3m3, gamma_oil:=DensityOil, gamma_gas:=gamma_gas)   ' подключен новый блок PVT
+    If Rs_m3m3 > 200 Then
+        Pb_atma_calc = PVT_Pb_atma(Tres_C, rsb_m3m3:=Rs_m3m3, gamma_oil:=DensityOil, gamma_gas:=gamma_gas)
+        bo_m3m3_calc = PVT_Bo_m3m3(Pb_atma, Tres_C, rsb_m3m3:=Rs_m3m3, gamma_oil:=DensityOil, gamma_gas:=gamma_gas)   ' подключен новый блок PVT
         delta_Pb_atma = Abs((Pb_atma_calc - Pb_atma) / Pb_atma_calc)
         delta_bo_m3m3 = Abs((bo_m3m3_calc - Bo_m3m3) / bo_m3m3_calc)
         If delta_Pb_atma < 0.2 Then
@@ -767,7 +767,7 @@ End Sub
 ' входные параметры адаптированы для данных тех режима скважин
 Public Function tr_N_calc(Ksep_fr As Double, _
         dcas_mm As Double, Pcas_atmg As Double, _
-        Pb_atma As Double, rs_m3m3 As Double, _
+        Pb_atma As Double, Rs_m3m3 As Double, _
         Qliq_sm3day As Double, Bo_m3m3 As Double, gamma_oil As Double, _
         wc_perc As Double, Optional Qg_mes_sm3day As Double = -1, _
         Optional tr_HydCor As Integer = 2, _
@@ -811,15 +811,15 @@ Dim Pb_atma_calc As Double
 Dim bo_m3m3_calc As Double
 If (Tres_C = 0) Then Tres_C = 60
 If dtub_mm = 0 Then dtub_mm = 60
-Call corelations_for_high_GOR(rs_m3m3 * gamma_oil, Tres_C, gamma_oil, gamma_gas, Pb_atma, Bo_m3m3, Pb_atma_calc, bo_m3m3_calc)
+Call corelations_for_high_GOR(Rs_m3m3 * gamma_oil, Tres_C, gamma_oil, gamma_gas, Pb_atma, Bo_m3m3, Pb_atma_calc, bo_m3m3_calc)
 Tav = 0.8 * Tres_C + 0.2 * const_Tsc_C
 Dim err_msg As String
-If CheckErrors(err_msg, 1, 1, 1, dcas_mm, Pb_atma, rs_m3m3, Bo_m3m3, gamma_oil, wc_perc, _
+If CheckErrors(err_msg, 1, 1, 1, dcas_mm, Pb_atma, Rs_m3m3, Bo_m3m3, gamma_oil, wc_perc, _
                 dtub_mm, Tres_C, , , Pcas_atmg, Ksep_fr, 1, Qliq_sm3day, 1, Qg_mes_sm3day, 1, Zav, 1) Then
  tr_N_calc = -1
  Exit Function
 End If
-Call var_calc_above_pump(Pcas_atmg, Ksep_fr, dcas_mm, dtub_mm, Pcas_atmg, Pb_atma_calc, rs_m3m3, Qliq_sm3day, bo_m3m3_calc, gamma_oil, wc_perc, Qg_mes_sm3day, Tav + 273, Zav, _
+Call var_calc_above_pump(Pcas_atmg, Ksep_fr, dcas_mm, dtub_mm, Pcas_atmg, Pb_atma_calc, Rs_m3m3, Qliq_sm3day, bo_m3m3_calc, gamma_oil, wc_perc, Qg_mes_sm3day, Tav + 273, Zav, _
     PfD, PfD, vsgb, PscD, wc_perc_d, Qw_vol, Qo_vol, rs_m3m3_vol, L0)
 If Qg_mes_sm3day < 0 Then
   Qg_measured = False
@@ -994,7 +994,7 @@ End Function
 '==========================================================
 '======================== mdlSkinCalc =====================
 '==========================================================
-Public Function tr_GetJd(hp, K, spgrpr, por, Kf, Re, Optional Mp = 5) As Double
+Public Function tr_GetJd(hp, k, spgrpr, por, Kf, Re, Optional Mp = 5) As Double
     Const mD = 9.869233E-16
     Dim Rw As Double, hf As Double, M As Double
     Dim Rp, vf, Vr, Nprop
@@ -1002,7 +1002,7 @@ Public Function tr_GetJd(hp, K, spgrpr, por, Kf, Re, Optional Mp = 5) As Double
     
     por = por / 100
     Kf = Kf * mD * 1000
-    K = K * mD
+    k = k * mD
     Rw = 0.1
     hf = hp * 1.5
     M = Mp * hp * 1000 / 2
@@ -1011,7 +1011,7 @@ Public Function tr_GetJd(hp, K, spgrpr, por, Kf, Re, Optional Mp = 5) As Double
     
     vf = Rp * M / ((1 - por) * (1000 * spgrpr))
     Vr = hp * Re ^ 2 * const_Pi
-    Nprop = (4 * vf * Kf) / (K * Vr)
+    Nprop = (4 * vf * Kf) / (k * Vr)
     
     Call FracOpt(Nprop, Jdopt, Cfdopt, Ixopt)
     tr_GetJd = Jdopt
@@ -1236,7 +1236,7 @@ Private Sub Calc_PVT_TR(ByVal P_atma As Double, ByVal T_K As Double, ByVal rsb_m
     
     'Assign output variables
     'p_b = PVT.Calc_Pb_atma(r_s, T_C)
-    r_s = PVT.rs_m3m3
+    r_s = PVT.Rs_m3m3
     b_o = PVT.Bo_m3m3
     mu_o = PVT.Muo_cP
     z = PVT.z
@@ -1247,8 +1247,8 @@ Private Sub Calc_PVT_TR(ByVal P_atma As Double, ByVal T_K As Double, ByVal rsb_m
     
     Set PVT = Nothing
 End Sub
-Private Function hasan_kabir_gradient_annuli_znlf(ByVal D_T As Double, ByVal D_C As Double, ByVal theta As Double, _
-                                  ByVal P As Double, ByVal q_gsc As Double, _
+Private Function hasan_kabir_gradient_annuli_znlf(ByVal D_T As Double, ByVal d_c As Double, ByVal theta As Double, _
+                                  ByVal p As Double, ByVal q_gsc As Double, _
                                   ByVal b_o As Double, ByVal b_g As Double, ByVal r_s As Double, ByVal sigma_o As Double, _
                                   ByVal rho_osc As Double, ByVal rho_gsc As Double, Optional Units As Integer = 1) As Double
 'function calculates pressure gradient for Zero Net Liquid flow in annulus
@@ -1286,9 +1286,9 @@ c_sigma(0) = 0.001: c_sigma(1) = 1
 Dim c_rho(2) As Double
 c_rho(0) = 16.02: c_rho(1) = 1
 'Convert all values to metric
-D_C = c_l(Units) * D_C
+d_c = c_l(Units) * d_c
 D_T = c_l(Units) * D_T
-P = c_p(Units) * P
+p = c_p(Units) * p
 r_s = c_rs_m3m3(Units) * r_s
 sigma_o = c_sigma(Units) * sigma_o
 rho_osc = c_rho(Units) * rho_osc
@@ -1299,7 +1299,7 @@ theta = theta / 180 * 3.141592
 'Calculate pressure gradient
 'Annulus cross-sectional area
 Dim a_p As Double
-a_p = 3.141592 * (D_C ^ 2 - D_T ^ 2) / 4
+a_p = 3.141592 * (d_c ^ 2 - D_T ^ 2) / 4
 'Calculate gas flow rate at reference pressure
 Dim q_g As Double
 q_g = b_g * q_gsc
@@ -1315,7 +1315,7 @@ Dim v_inf As Double
 v_inf = 1.53 * (const_g * sigma_o * (rho_o - rho_g) / rho_o ^ 2) ^ 0.25
 'Calculate Taylor bubble rise velosity
 Dim v_inf_tb As Double
-v_inf_tb = (0.345 + 0.1 * D_T / D_C) * (const_g * D_C * (rho_o - rho_g) / rho_o) ^ 0.5 * (Sin(theta)) ^ 0.5 * (1 + Cos(theta)) ^ 1.2
+v_inf_tb = (0.345 + 0.1 * D_T / d_c) * (const_g * d_c * (rho_o - rho_g) / rho_o) ^ 0.5 * (Sin(theta)) ^ 0.5 * (1 + Cos(theta)) ^ 1.2
 'velocity profile constant
 Dim c_0 As Double
 c_0 = 1.2
@@ -1354,11 +1354,11 @@ rho_s = rho_o * h_l + rho_g * (1 - h_l)
 hasan_kabir_gradient_annuli_znlf = 0.000009871 * c_l(Units) / c_p(Units) * rho_s * const_g * Sin(theta)
 End Function
 Private Function BB_Pressure_Drop(ByVal d As Double, ByVal length As Double, ByVal theta As Double, ByVal eps As Double, _
-                               ByVal p_sn As Double, ByVal T_sn As Double, ByVal T_en As Double, _
+                               ByVal P_sn As Double, ByVal T_sn As Double, ByVal T_en As Double, _
                                ByVal q_lsc As Double, ByVal WCT As Double, ByVal gamma_o As Double, ByVal gamma_gas As Double, _
                                ByVal r_sb As Double, Optional ByVal Salinity As Double = -1, Optional Calc_p_out As Integer = 0, _
-                               Optional yukos_standard As Integer = 0, Optional Units As Integer = 1, _
-                               Optional p_rb As Double = -1, Optional b_ro As Double = -1) As Double
+                               Optional Yukos_standard As Integer = 0, Optional Units As Integer = 1, _
+                               Optional P_rb As Double = -1, Optional b_ro As Double = -1) As Double
 'function for calculation of pressure at end node of pipe given the start node pressure using Begs and Brill gradient prediction method
 'return value (psi(atma))
 'Arguments
@@ -1403,10 +1403,10 @@ eps = c_length(Units) * eps
 Dim c_pr(2)
 c_pr(0) = 14.6959: c_pr(1) = 1
 'Convert start node pressure
-p_sn = p_sn / c_pr(Units)
+P_sn = P_sn / c_pr(Units)
 'Convert calibration pressure
-If (p_rb > 0) Then 'user specified
-  p_rb = p_rb / c_pr(Units)
+If (P_rb > 0) Then 'user specified
+  P_rb = P_rb / c_pr(Units)
 End If
 'Air density at standart conditions
 'Dim rho_air As Double
@@ -1484,10 +1484,10 @@ Dim sign As Integer
 Dim counter As Integer
 Dim delta_p As Double
 'workspace to store current pressure, temperature and length, increments for length and temperature
-Dim P As Double
-P = p_sn
+Dim p As Double
+p = P_sn
 Dim p_pvt As Double
-p_pvt = P
+p_pvt = p
 Dim t As Double
 t = T_sn
 Dim t_pvt As Double
@@ -1511,10 +1511,10 @@ Do
   counter = 0
   Do ' iterate calculating PVT at center of segment
     'calculate PVT properties
-    p_pvt = P + 0.5 * delta_p
+    p_pvt = p + 0.5 * delta_p
     t_pvt = t + 0.5 * delta_t
-    Call Calc_PVT_TR(p_pvt, t_pvt, r_sb, gamma_o, gamma_gas, yukos_standard, p_b, r_s, b_o, mu_o, z, _
-                  b_g, mu_g, b_w, mu_w, p_rb, b_ro, Salinity, gamma_w)
+    Call Calc_PVT_TR(p_pvt, t_pvt, r_sb, gamma_o, gamma_gas, Yukos_standard, p_b, r_s, b_o, mu_o, z, _
+                  b_g, mu_g, b_w, mu_w, P_rb, b_ro, Salinity, gamma_w)
 '    dp_dl = tr_Multiphase_module.BegsBrillGradient_tr(D, theta, eps, p_pvt, q_osc, q_wsc, q_gsc, b_o, _
 '                              b_w, b_g, r_s, mu_o, mu_w, mu_g, sigma_o, sigma_w, rho_osc, rho_w_sc, rho_gsc, 1, 0, 1)
     q_lrc = q_osc_ * b_o + q_wsc * b_w    ' надо проверить
@@ -1528,19 +1528,19 @@ Do
     
     delta_p = sign * dp_dl * delta_l
     counter = counter + 1
-  Loop Until (Abs(p_pvt - (P + 0.5 * delta_p)) < 0.5 Or counter > MaxIter)
-  P = P + delta_p
+  Loop Until (Abs(p_pvt - (p + 0.5 * delta_p)) < 0.5 Or counter > MaxIter)
+  p = p + delta_p
   t = t + delta_t
   l = l + delta_l
 Loop Until (l >= length - 0.001)
-BB_Pressure_Drop = c_pr(Units) * P
+BB_Pressure_Drop = c_pr(Units) * p
 End Function
-Private Function Hasan_Kabir_liquid_column(ByVal D_T As Double, ByVal D_C As Double, ByVal theta As Double, _
+Private Function Hasan_Kabir_liquid_column(ByVal D_T As Double, ByVal d_c As Double, ByVal theta As Double, _
                                   ByVal p_p As Double, ByVal p_c As Double, ByVal q_osc As Double, ByVal e_s As Double, _
                                   ByVal t As Double, ByVal r_sb As Double, ByVal sigma_o As Double, _
                                   ByVal gamma_o As Double, ByVal gamma_gas As Double, _
-                                  Optional Units As Integer = 1, Optional yukos_standard As Integer = 0, _
-                                  Optional ByVal p_rb As Double = -1, Optional ByVal b_ro As Double = -1) As Double
+                                  Optional Units As Integer = 1, Optional Yukos_standard As Integer = 0, _
+                                  Optional ByVal P_rb As Double = -1, Optional ByVal b_ro As Double = -1) As Double
 'Calculate liquid column height using Hasan-Kabir znlf tr_HydCor
 'Arguments
 'd_t -  internal diameter theta(ft (m))
@@ -1591,7 +1591,7 @@ T_F(0) = 0.557: T_F(1) = 1
 Dim t_offs(2) As Double
 t_offs(0) = 255.22: t_offs(1) = 273
 'Convert all values to metric
-D_C = c_l(Units) * D_C
+d_c = c_l(Units) * d_c
 D_T = c_l(Units) * D_T
 p_p = c_p(Units) * p_p
 p_c = c_p(Units) * p_c
@@ -1608,8 +1608,8 @@ rho_osc = gamma_o * const_rho_ref
 Dim rho_gsc As Double
 rho_gsc = gamma_gas * const_rho_air
 'workspace to store current pressure and length, increments for length and temperature
-Dim P As Double
-P = p_p
+Dim p As Double
+p = p_p
 Dim l As Double
 l = 0
 'PVT properties
@@ -1622,8 +1622,8 @@ Dim void As Double
 Dim dp_dl As Double
 'calculate gas rate at standart conditions
 'calculate solution GOR at pump intake
-Call Calc_PVT_TR(P, t, r_sb, gamma_o, gamma_gas, yukos_standard, void, r_s, b_o, void, _
-              void, b_g, void, void, void, p_rb, b_ro, 50000, 1)
+Call Calc_PVT_TR(p, t, r_sb, gamma_o, gamma_gas, Yukos_standard, void, r_s, b_o, void, _
+              void, b_g, void, void, void, P_rb, b_ro, 50000, 1)
 'Calculate gas rate
 Dim q_gsc As Double
 q_gsc = e_s * (r_sb - r_s) * q_osc
@@ -1635,16 +1635,16 @@ If (p_c < p_p) Then
         
       'calculate PVT properties
       '----------------------------------------------------------------
-      Call Calc_PVT_TR(P, t, r_sb, gamma_o, gamma_gas, yukos_standard, void, r_s, b_o, void, _
-                    void, b_g, void, void, void, p_rb, b_ro, 50000, 1)
+      Call Calc_PVT_TR(p, t, r_sb, gamma_o, gamma_gas, Yukos_standard, void, r_s, b_o, void, _
+                    void, b_g, void, void, void, P_rb, b_ro, 50000, 1)
       'PVT calculations end --------------------------------------------
-      dp_dl = hasan_kabir_gradient_annuli_znlf(D_T, D_C, theta, P, q_gsc, b_o, b_g, r_s, sigma_o, rho_osc, rho_gsc, 1)
-      P = P - dp_dl * delta_l
+      dp_dl = hasan_kabir_gradient_annuli_znlf(D_T, d_c, theta, p, q_gsc, b_o, b_g, r_s, sigma_o, rho_osc, rho_gsc, 1)
+      p = p - dp_dl * delta_l
       l = l + delta_l
       counter = counter + 1
-    Loop Until ((P <= p_c) Or (counter > max_steps))
+    Loop Until ((p <= p_c) Or (counter > max_steps))
     'correct for exceeding p (p < p_c)
-    l = l - (p_c - P) / dp_dl
+    l = l - (p_c - p) / dp_dl
 Else
   l = 0
 End If
@@ -1655,31 +1655,31 @@ Else 'normal output
 End If
 End Function
 Private Function BB_P_Out(ByVal d As Double, ByVal length As Double, ByVal theta As Double, _
-                               ByVal p_sn As Double, ByVal T_en As Double, _
+                               ByVal P_sn As Double, ByVal T_en As Double, _
                                ByVal q_osc As Double, ByVal WCT As Double, ByVal gamma_o As Double, ByVal gamma_gas As Double, _
                                ByVal r_sb As Double, Optional ByVal Salinity As Double = -1, _
-                               Optional yukos_standard As Integer = 0, Optional ByVal T_sn As Double = 15.55, Optional eps As Double = 0.00004572, _
-                               Optional p_rb As Double = -1, Optional b_ro As Double = -1) As Double
+                               Optional Yukos_standard As Integer = 0, Optional ByVal T_sn As Double = 15.55, Optional eps As Double = 0.00004572, _
+                               Optional P_rb As Double = -1, Optional b_ro As Double = -1) As Double
 'function for calculation of pressure at output node of pipe given the pressure at input node using Begs and Brill gradient prediction method
     
-    BB_P_Out = BB_Pressure_Drop(d, length, theta, eps, p_sn, T_sn, T_en, q_osc, WCT, gamma_o, gamma_gas, r_sb, Salinity, 1, yukos_standard, 1, p_rb, b_ro)
+    BB_P_Out = BB_Pressure_Drop(d, length, theta, eps, P_sn, T_sn, T_en, q_osc, WCT, gamma_o, gamma_gas, r_sb, Salinity, 1, Yukos_standard, 1, P_rb, b_ro)
 End Function
 Private Function BB_P_In(ByVal d As Double, ByVal length As Double, ByVal theta As Double, _
-                               ByVal p_sn As Double, ByVal T_en As Double, _
+                               ByVal P_sn As Double, ByVal T_en As Double, _
                                ByVal q_lsc As Double, ByVal WCT As Double, ByVal gamma_o As Double, ByVal gamma_gas As Double, _
                                ByVal r_sb As Double, Optional ByVal Salinity As Double = -1, _
-                               Optional yukos_standard As Integer = 0, Optional ByVal T_sn As Double = 15.55, Optional eps As Double = 0.00004572, _
-                               Optional p_rb As Double = -1, Optional b_ro As Double = -1) As Double
+                               Optional Yukos_standard As Integer = 0, Optional ByVal T_sn As Double = 15.55, Optional eps As Double = 0.00004572, _
+                               Optional P_rb As Double = -1, Optional b_ro As Double = -1) As Double
 'function for calculation of pressure at output node of pipe given the pressure at input node using Begs and Brill gradient prediction method
     
-    BB_P_In = BB_Pressure_Drop(d, length, theta, eps, p_sn, T_sn, T_en, q_lsc, WCT, gamma_o, gamma_gas, r_sb, Salinity, 0, yukos_standard, 1, p_rb, b_ro)
+    BB_P_In = BB_Pressure_Drop(d, length, theta, eps, P_sn, T_sn, T_en, q_lsc, WCT, gamma_o, gamma_gas, r_sb, Salinity, 0, Yukos_standard, 1, P_rb, b_ro)
 End Function
-Private Function GVisc(t As Double, P As Double, z As Double, gamma_gas As Double)
+Private Function GVisc(t As Double, p As Double, z As Double, gamma_gas As Double)
     Dim r As Double, mwg As Double, gd As Double
     Dim a As Double, B As Double, c As Double
     r = 1.8 * t
     mwg = 28.966 * gamma_gas
-    gd = P * mwg / (z * t * 8.31)
+    gd = p * mwg / (z * t * 8.31)
     a = (9.379 + 0.01607 * mwg) * r ^ 1.5 / (209.2 + 19.26 * mwg + r)
     B = 3.448 + 986.4 / r + 0.01009 * mwg
     c = 2.447 - 0.2224 * B
@@ -1706,7 +1706,7 @@ End Function
 Private Function P_L(ByVal Pwf As Double, ByVal L_wh As Double, _
        ByVal Hvd_m As Double, ByVal Hpump_m As Double, ByVal Udl_m As Double, _
        ByVal dcas_mm As Double, ByVal Qliq_sm3day As Double, ByVal wc_perc As Double, _
-       ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
+       ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
        ByVal gamma_oil As Double, ByVal gamma_wat As Double, _
  _
    Optional ByVal tr_HydCor As Integer = 2, Optional ByVal Ksep_fr As Double = 0.7, _
@@ -1746,21 +1746,21 @@ Call Habs_Hmes(Udl_m, Hvd_m, Hpump_m, L_wh, HPerfAbs, HpumpAbs, L_whAbs)
 P_L = 0
 If (L_whAbs <= HPerfAbs) And (L_whAbs >= HpumpAbs) Then
   ' если уровень ниже насоса  - используем вычисление давление на насосе
-  P_L = Pin_Pwf(Pwf, HPerfAbs - L_whAbs, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma, rs_m3m3, Bo_m3m3, gamma_oil, gamma_wat, _
+  P_L = Pin_Pwf(Pwf, HPerfAbs - L_whAbs, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma, Rs_m3m3, Bo_m3m3, gamma_oil, gamma_wat, _
                  tr_HydCor, dtub_mm, Bw_m3m3, Tres_C, Zav)
 End If
 If (L_whAbs < HpumpAbs) And (L_whAbs > 0) Then
   ' если уровень выше насоса
-  Pin = Pin_Pwf(Pwf, HPerfAbs - HpumpAbs, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma, rs_m3m3, Bo_m3m3, gamma_oil, gamma_wat, _
+  Pin = Pin_Pwf(Pwf, HPerfAbs - HpumpAbs, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma, Rs_m3m3, Bo_m3m3, gamma_oil, gamma_wat, _
                 tr_HydCor, dtub_mm, Bw_m3m3, Tres_C, Zav)
-  P_L = Pcas_atmg_L(Pin, HpumpAbs - L_whAbs, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma, rs_m3m3, Bo_m3m3, gamma_oil, _
+  P_L = Pcas_atmg_L(Pin, HpumpAbs - L_whAbs, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma, Rs_m3m3, Bo_m3m3, gamma_oil, _
      Qg_mes_sm3day, tr_HydCor, Ksep_fr, dtub_mm, Bw_m3m3, Tres_C, Zav)
 End If
 End Function
 ' расчет веса столба жидкости заданной высоты  ниже насоса
 Private Static Function Pin_Pwf(ByVal Pwf As Double, ByVal Lbh As Double, _
        ByVal dcas_mm As Double, ByVal Qliq_sm3day As Double, ByVal wc_perc As Double, _
-       ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
+       ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
        ByVal gamma_oil As Double, ByVal gamma_wat As Double, _
  _
    Optional ByVal tr_HydCor As Integer = 2, _
@@ -1802,7 +1802,7 @@ Private Static Function Pin_Pwf(ByVal Pwf As Double, ByVal Lbh As Double, _
   Dim bo_m3m3_calc As Double
     
   If correct_high_GOR Then
-    Call corelations_for_high_GOR(rs_m3m3 * gamma_oil, Tres_C - 273, gamma_oil, gamma_gas, Pb_atma, Bo_m3m3, Pb_atma_calc, bo_m3m3_calc)
+    Call corelations_for_high_GOR(Rs_m3m3 * gamma_oil, Tres_C - 273, gamma_oil, gamma_gas, Pb_atma, Bo_m3m3, Pb_atma_calc, bo_m3m3_calc)
   Else
     Pb_atma_calc = Pb_atma
     bo_m3m3_calc = Bo_m3m3
@@ -1811,7 +1811,7 @@ Private Static Function Pin_Pwf(ByVal Pwf As Double, ByVal Lbh As Double, _
  void = -1
  Dim Pin_void As Double: Dim Qw_void As Double:
  Dim Qo_void As Double: Dim rs_m3m3_void As Double:
- Call var_calc_below_pump(Pwf, dcas_mm, dtub_mm, Pb_atma_calc, rs_m3m3, Qliq_sm3day, bo_m3m3_calc, Bw_m3m3, gamma_oil, gamma_wat, wc_perc, void, void, Tres_C, Zav, _
+ Call var_calc_below_pump(Pwf, dcas_mm, dtub_mm, Pb_atma_calc, Rs_m3m3, Qliq_sm3day, bo_m3m3_calc, Bw_m3m3, gamma_oil, gamma_wat, wc_perc, void, void, Tres_C, Zav, _
            PwfD, vsgw, vsl, PscD, wc_perc_out, Qw_void, Qo_void, rs_m3m3_void, L0_w)
  
  Dim Lbhd As Double
@@ -1824,7 +1824,7 @@ Private Static Function Pin_Pwf(ByVal Pwf As Double, ByVal Lbh As Double, _
 ' расчет веса столба жидкости заданной высоты  выше насоса
 Private Function Pcas_atmg_L(ByVal Pin As Double, ByVal Lpump As Double, _
         ByVal dcas_mm As Double, ByVal Qliq_sm3day As Double, ByVal wc_perc As Double, _
-        ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
+        ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
         ByVal gamma_oil As Double, _
          Optional ByVal Qg_mes_sm3day As Double = -1, _
          Optional ByVal tr_HydCor As Integer = 2, Optional ByVal Ksep_fr As Double = 0.7, _
@@ -1862,7 +1862,7 @@ Dim PfD As Double ' безразмерное затрубное давление
 Dim PscD As Double ' безразмерное давление при стардартных условиях
 Dim Qg_measured As Boolean
 Dim void As Double
-Call var_calc_above_pump(Pin, Ksep_fr, dcas_mm, dtub_mm, void, Pb_atma, rs_m3m3, Qliq_sm3day, Bo_m3m3, gamma_oil, wc_perc, Qg_mes_sm3day, Tres_C, Zav, _
+Call var_calc_above_pump(Pin, Ksep_fr, dcas_mm, dtub_mm, void, Pb_atma, Rs_m3m3, Qliq_sm3day, Bo_m3m3, gamma_oil, wc_perc, Qg_mes_sm3day, Tres_C, Zav, _
     PinD, PfD, vsgb, PscD, wc_perc_d, Qw_vol, Qo_vol, rs_m3m3_vol, L0)
 If Qg_mes_sm3day < 0 Then
   Qg_measured = False
@@ -1876,7 +1876,7 @@ End Function
 Private Function Hd_Pwf(ByVal Pwf As Double, ByVal Pcas_atmg As Double, _
         ByVal Hvd_m As Double, ByVal Hpump_m As Double, ByVal Udl_m As Double, _
         ByVal dcas_mm As Double, ByVal Qliq_sm3day As Double, ByVal wc_perc As Double, _
-        ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
+        ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
         ByVal gamma_oil As Double, ByVal gamma_wat As Double, _
  _
     Optional ByVal tr_HydCor As Integer = 2, Optional ByVal Ksep_fr As Double = 0.7, _
@@ -1892,7 +1892,7 @@ Private Function Hd_Pwf(ByVal Pwf As Double, ByVal Pcas_atmg As Double, _
  Dim Pb_atma_calc As Double
  Dim bo_m3m3_calc As Double
    
- Call corelations_for_high_GOR(rs_m3m3 * gamma_oil, Tres_C - 273, gamma_oil, gamma_gas, Pb_atma, Bo_m3m3, Pb_atma_calc, bo_m3m3_calc)
+ Call corelations_for_high_GOR(Rs_m3m3 * gamma_oil, Tres_C - 273, gamma_oil, gamma_gas, Pb_atma, Bo_m3m3, Pb_atma_calc, bo_m3m3_calc)
  
 ' расчет средней температуры в затрубе
 If (Tres_C = 0) Then
@@ -1907,12 +1907,12 @@ If Udl_Hpump_m = -1 Then Udl_Hpump_m = Hpump_m * Udl_m / Hvd_m
  
 ' Pin = Pin_Pwf(Pwf, correction * (Hvd_m - Hpump_m), Dcas_mm, Qliq_sm3day, wc_perc, Pb_atma_calc, rs_m3m3, bo_m3m3_calc, gamma_oil, gamma_wat, _
  '       tr_HydCor, Dtub_mm, Bw_m3m3, Tav, Zav, gamma_gas)
- Pin = Pin_Pwf(Pwf, ((Hvd_m - Udl_m) - (Hpump_m - Udl_Hpump_m)), dcas_mm, Qliq_sm3day, wc_perc, Pb_atma_calc, rs_m3m3, bo_m3m3_calc, gamma_oil, gamma_wat, _
+ Pin = Pin_Pwf(Pwf, ((Hvd_m - Udl_m) - (Hpump_m - Udl_Hpump_m)), dcas_mm, Qliq_sm3day, wc_perc, Pb_atma_calc, Rs_m3m3, bo_m3m3_calc, gamma_oil, gamma_wat, _
         tr_HydCor, dtub_mm, Bw_m3m3, Tav, Zav, gamma_gas)
  'Hd_Pwf = 1 / correction * _
  '  (Hpump_m * correction - L_Pin(Pin, Pcas_atmg, Dcas_mm, Qliq_sm3day, wc_perc, Pb_atma_calc, rs_m3m3, bo_m3m3_calc, gamma_oil, Qg_mes_sm3day, _
  '   tr_HydCor, Ksep_fr, Dtub_mm, Bw_m3m3, Tav, Zav))
- Hd_Pwf = 1 / correction * (Hpump_m * correction - L_Pin(Pin, Pcas_atmg, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma_calc, rs_m3m3, bo_m3m3_calc, gamma_oil, Qg_mes_sm3day, _
+ Hd_Pwf = 1 / correction * (Hpump_m * correction - L_Pin(Pin, Pcas_atmg, dcas_mm, Qliq_sm3day, wc_perc, Pb_atma_calc, Rs_m3m3, bo_m3m3_calc, gamma_oil, Qg_mes_sm3day, _
     tr_HydCor, Ksep_fr, dtub_mm, Bw_m3m3, Tav, Zav))
     
 End Function
@@ -1920,7 +1920,7 @@ End Function
 ' входные параметры адаптированы для данных тех режима скважин
 Private Function L_Pin(ByVal Pin As Double, ByVal Pcas_atmg As Double, _
         ByVal dcas_mm As Double, ByVal Qliq_sm3day As Double, ByVal wc_perc As Double, _
-        ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
+        ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, ByVal Bo_m3m3 As Double, _
         ByVal gamma_oil As Double, _
         Optional ByVal Qg_mes_sm3day As Double = -1, _
     Optional ByVal tr_HydCor As Integer = 2, Optional ByVal Ksep_fr As Double = 0.7, _
@@ -1956,7 +1956,7 @@ Dim Ld_above_pump As Double  ' безразмерная высота столба жидкости над насосом
 Dim PfD As Double ' безразмерное затрубное давление
 Dim PscD As Double ' безразмерное давление при стардартных условиях
 Dim Qg_measured As Boolean
-Call var_calc_above_pump(Pin, Ksep_fr, dcas_mm, dtub_mm, Pcas_atmg, Pb_atma, rs_m3m3, Qliq_sm3day, Bo_m3m3, gamma_oil, wc_perc, Qg_mes_sm3day, Tav, Zav, _
+Call var_calc_above_pump(Pin, Ksep_fr, dcas_mm, dtub_mm, Pcas_atmg, Pb_atma, Rs_m3m3, Qliq_sm3day, Bo_m3m3, gamma_oil, wc_perc, Qg_mes_sm3day, Tav, Zav, _
     PinD, PfD, vsgb, PscD, wc_perc_d, Qw_vol, Qo_vol, rs_m3m3_vol, L0)
 If Qg_mes_sm3day < 0 Then
   Qg_measured = False
@@ -1977,7 +1977,7 @@ End Sub
 ' расчет вспомогательных переменных ниже насоса
 Private Sub var_calc_below_pump(ByVal Pin_atmg As Double, _
         ByVal dcas_mm As Double, ByVal dtub_mm As Double, _
-        ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, _
+        ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, _
         ByVal Qliq_sm3day As Double, ByVal Bo_m3m3 As Double, ByVal Bw_m3m3 As Double, _
         ByVal gamma_oil As Double, ByVal gamma_wat As Double, _
         ByVal wc_perc As Double, ByVal Qo As Double, ByVal Qw As Double, _
@@ -2001,12 +2001,12 @@ Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
         wc_perc_d = wc_perc / 100
         Qw_vol = Qliq_sm3day * wc_perc_d
         Qo_vol = Qliq_sm3day * (1 - wc_perc_d)
-        rs_m3m3_vol = rs_m3m3 * gamma_oil
+        rs_m3m3_vol = Rs_m3m3 * gamma_oil
     Else
         wc_perc_d = Qw / (Qo + Qw)
         Qw_vol = Qw
         Qo_vol = Qo
-        rs_m3m3_vol = rs_m3m3
+        rs_m3m3_vol = Rs_m3m3
     End If
     Pin_atma = Pin_atmg + const_Psc_atma
     PinD = Pin_atma / Pb_atma
@@ -2023,7 +2023,7 @@ End Sub
 ' расчет вспомогательных переменных ниже насоса
 Private Sub var_calc_above_pump(ByVal Pin_atmg As Double, ByVal Ksep_fr As Double, _
         ByVal dcas_mm As Double, ByVal dtub_mm As Double, ByVal Pcas_atmg As Double, _
-        ByVal Pb_atma As Double, ByVal rs_m3m3 As Double, _
+        ByVal Pb_atma As Double, ByVal Rs_m3m3 As Double, _
         ByVal Qliq_sm3day As Double, ByVal Bo_m3m3 As Double, ByVal gamma_oil As Double, _
         ByVal wc_perc As Double, ByVal Qg_mes_sm3day As Double, ByVal Tav As Double, ByVal Zav As Double, _
  _
@@ -2043,7 +2043,7 @@ Dim al As Double ' размерный коэфициент площади
     wc_perc_d = wc_perc / 100
     Qw_vol = Qliq_sm3day * wc_perc_d
     Qo_vol = Qliq_sm3day * (1 - wc_perc_d)
-    rs_m3m3_vol = rs_m3m3 * gamma_oil
+    rs_m3m3_vol = Rs_m3m3 * gamma_oil
     Pcas_atma = Pcas_atmg + const_Psc_atma
     Pin_atma = Pin_atmg + const_Psc_atma
     PinD = Pin_atma / Pb_atma
@@ -2076,7 +2076,7 @@ Private Function PinD_PwfD(ByVal PwfD As Double, ByVal Lind As Double, _
 ' tr_HydCor - корреляция для расчета 1. Хасан Кабир Хасанов
                              
  Dim PinD As Double
- Dim P As Double, l As Double
+ Dim p As Double, l As Double
  
  Dim P1 As Double:
  Dim P2 As Double:
@@ -2085,28 +2085,28 @@ Private Function PinD_PwfD(ByVal PwfD As Double, ByVal Lind As Double, _
  
  ' search sollution
  Do
-  P = (P2 + P1) / 2
+  p = (P2 + P1) / 2
   
   Select Case tr_HydCor
    Case 2, 3, 4
-    l = Lwd_Pwfd_ro(PwfD, P, vsgw, vsl, Bo_m3m3, PscD, wc_perc, gamma_gas, tr_HydCor)
+    l = Lwd_Pwfd_ro(PwfD, p, vsgw, vsl, Bo_m3m3, PscD, wc_perc, gamma_gas, tr_HydCor)
     
   End Select
   If (Abs(l - Lind) < 0.0001) Or Abs(P1 - P2) < 0.0000001 Then Exit Do ' определиться с точностью !!!
-  If l < Lind Then P1 = P Else P2 = P      ' можно в итоге применить и линейную интерполяцию !!!
+  If l < Lind Then P1 = p Else P2 = p      ' можно в итоге применить и линейную интерполяцию !!!
  Loop
  
- PinD_PwfD = P
+ PinD_PwfD = p
  
  If Abs(P1 - P2) < 0.0000001 Then
  
- PinD_PwfD = P
+ PinD_PwfD = p
  End If
 End Function
 ' Вычисление давления на приеме насоса по газовому фактору
 Private Function Pwf_rs_m3m3(Ksep_fr As Double, Hvd_m As Double, Hpump_m As Double, _
     Hdyn_m As Double, Pb_atma As Double, Pcas_atmg As Double, _
-    rs_m3m3 As Double, Qo As Double, Bo_m3m3 As Double, gamma_oil As Double, _
+    Rs_m3m3 As Double, Qo As Double, Bo_m3m3 As Double, gamma_oil As Double, _
     Qw As Double, gamma_wat As Double, dcas_mm As Double, _
     Optional tr_HydCor As Integer = 2, _
     Optional dtub_mm As Double = 60, Optional Bw_m3m3 As Double = 1, _
@@ -2134,13 +2134,13 @@ Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
 Const QGasMeasured = False
 ' вычислим дебит газа для расчета выше насоса
 '
-Qgsc = Qo * rs_m3m3 * Ksep_fr
-Pwf_rs_m3m3 = Pwf_Qgmes_atma(Qgsc, Hvd_m, Hpump_m, Hdyn_m, rs_m3m3, Pb_atma, Pcas_atmg, Qo, Bo_m3m3, gamma_oil, Qw, gamma_wat, dcas_mm, _
+Qgsc = Qo * Rs_m3m3 * Ksep_fr
+Pwf_rs_m3m3 = Pwf_Qgmes_atma(Qgsc, Hvd_m, Hpump_m, Hdyn_m, Rs_m3m3, Pb_atma, Pcas_atmg, Qo, Bo_m3m3, gamma_oil, Qw, gamma_wat, dcas_mm, _
                      tr_HydCor, dtub_mm, Bw_m3m3, Tav, Zav, QGasMeasured)
 End Function
 ' Вычисление давления на забое по давлению на приеме насоса
 Private Function Pwf_Pin_atma(ByVal Pin_atmg As Double, ByVal Hvd_m As Double, ByVal Hpump_m As Double, _
-    ByVal rs_m3m3 As Double, ByVal Pb_atma As Double, _
+    ByVal Rs_m3m3 As Double, ByVal Pb_atma As Double, _
     ByVal Qo As Double, ByVal Bo_m3m3 As Double, ByVal gamma_oil As Double, _
     ByVal Qw As Double, ByVal gamma_wat As Double, ByVal dcas_mm As Double, _
     Optional ByVal tr_HydCor As Integer = 2, _
@@ -2183,7 +2183,7 @@ Dim void As Double
 Dim Pin_void As Double: Dim Qw_void As Double: Dim Qo_void As Double: Dim rs_m3m3_void As Double
     void = -1
     
-    Call var_calc_below_pump(void, dcas_mm, 60, Pb_atma, rs_m3m3, void, Bo_m3m3, Bw_m3m3, gamma_oil, gamma_wat, void, Qo, Qw, Tav, Zav, _
+    Call var_calc_below_pump(void, dcas_mm, 60, Pb_atma, Rs_m3m3, void, Bo_m3m3, Bw_m3m3, gamma_oil, gamma_wat, void, Qo, Qw, Tav, Zav, _
                Pin_void, vsgw, vsl, PscD, wc_perc, Qw_void, Qo_void, rs_m3m3_void, L0_w)
     wc_perc = Qw / (Qw + Qo)
     Pin_atma = Pin_atmg + const_Psc_atma
@@ -2196,7 +2196,7 @@ Dim Pin_void As Double: Dim Qw_void As Double: Dim Qo_void As Double: Dim rs_m3m
 End Function
 ' Вычисление давления на приеме насоса по замеру расхода газа в затрубе
 Private Function Pwf_Qgmes_atma(ByVal Qgmes As Double, ByVal Hvd_m As Double, ByVal Hpump_m As Double, _
-    ByVal Hdyn_m As Double, ByVal rs_m3m3 As Double, ByVal Pb_atma As Double, ByVal Pcas_atmg As Double, _
+    ByVal Hdyn_m As Double, ByVal Rs_m3m3 As Double, ByVal Pb_atma As Double, ByVal Pcas_atmg As Double, _
     ByVal Qo As Double, ByVal Bo_m3m3 As Double, ByVal gamma_oil As Double, _
     ByVal Qw As Double, ByVal gamma_wat As Double, ByVal dcas_mm As Double, _
     Optional ByVal tr_HydCor As Integer = 2, _
@@ -2243,7 +2243,7 @@ Dim wc_perc As Double     ' обводненность в стандартных условиях
 Dim void As Double
 void = -1
 Dim Pin_void As Double: Dim Qw_void As Double: Dim Qo_void As Double: Dim rs_m3m3_void As Double
-Call var_calc_below_pump(void, dcas_mm, dtub_mm, Pb_atma, rs_m3m3, void, Bo_m3m3, Bw_m3m3, gamma_oil, gamma_wat, void, Qo, Qw, Tav, Zav, _
+Call var_calc_below_pump(void, dcas_mm, dtub_mm, Pb_atma, Rs_m3m3, void, Bo_m3m3, Bw_m3m3, gamma_oil, gamma_wat, void, Qo, Qw, Tav, Zav, _
            Pin_void, vsgw, vsl, PscD, wc_perc, Qw_void, Qo_void, rs_m3m3_void, L0_w)
            
 wc_perc = Qw / (Qw + Qo)
@@ -2271,12 +2271,12 @@ Private Function Pwfd_Pind_pshl(Lind As Double, PinD As Double, _
  Dim P2 As Double:
  Dim s As Integer: s = 1   ' константа уточнение решений для случаев низких давлений насыщания
  Dim l As Double
- Dim P As Double
+ Dim p As Double
  Const Max_PwfD = 10
  
- P = Max_PwfD / 2 ' правильная инициализация переменной для выполнения\ условия цикла
+ p = Max_PwfD / 2 ' правильная инициализация переменной для выполнения\ условия цикла
  
- Do Until (Abs(P - (Max_PwfD * s / 2)) > 0.0000001) ' выполнять до тех пор, пока решение не будет отличаться от оценки правой границы допустимого диапазона
+ Do Until (Abs(p - (Max_PwfD * s / 2)) > 0.0000001) ' выполнять до тех пор, пока решение не будет отличаться от оценки правой границы допустимого диапазона
  
   P1 = PinD
   P2 = Max_PwfD * s
@@ -2287,26 +2287,26 @@ Private Function Pwfd_Pind_pshl(Lind As Double, PinD As Double, _
   ' search sollution
   Do
    'i = i + 1
-   P = (P2 + P1) / 2
+   p = (P2 + P1) / 2
   
    Select Case tr_HydCor
     Case 2, 3, 4
-     l = Lwd_Pwfd_ro(P, PinD, vsgw, vsl, Bo_m3m3, PscD, wc_perc, gamma_gas, tr_HydCor)
+     l = Lwd_Pwfd_ro(p, PinD, vsgw, vsl, Bo_m3m3, PscD, wc_perc, gamma_gas, tr_HydCor)
     
    End Select
    If (Abs(l - Lind) < 0.0001) Or Abs(P1 - P2) < 0.0000001 Then Exit Do ' определиться с точностью !!!
-   If l < Lind Then P1 = P Else P2 = P      ' можно в итоге применить и линейную интерполяцию !!!
+   If l < Lind Then P1 = p Else P2 = p      ' можно в итоге применить и линейную интерполяцию !!!
   Loop
   
   s = s * 2
  Loop
- Pwfd_Pind_pshl = P
+ Pwfd_Pind_pshl = p
 End Function
 '***************************************************************************************************************'
 '
 ' Вычисление давления на приеме насоса по газовому фактору
 Private Function Pin_rs_m3m3(Ksep_fr As Double, Hpump_m As Double, Hdyn_m As Double, Pb_atma As Double, Pcas_atmg As Double, _
-    rs_m3m3 As Double, Qo As Double, Bo_m3m3 As Double, gamma_oil As Double, dcas_mm As Double, _
+    Rs_m3m3 As Double, Qo As Double, Bo_m3m3 As Double, gamma_oil As Double, dcas_mm As Double, _
     Optional tr_HydCor As Integer = 2, _
     Optional dtub_mm As Double = 60, Optional Tav As Double = 330, Optional Zav As Double = 0.9)
 ' Входные параметры
@@ -2326,7 +2326,7 @@ Private Function Pin_rs_m3m3(Ksep_fr As Double, Hpump_m As Double, Hdyn_m As Dou
 ' Tav = 330 температура в затрубе средняя, К
 ' Zav = 0.9  сверхсжимаемость газа в затрубе
 Dim Qgsc As Double  ' дебит газа в затрубе в стандартных условиях
-Qgsc = Qo * rs_m3m3 * Ksep_fr
+Qgsc = Qo * Rs_m3m3 * Ksep_fr
 ' вызываем расчет для замера газа и передаем ему флаг что у нас идет расчет
 Pin_rs_m3m3 = Pin_Qgmes_atma(Qgsc, Hpump_m, Hdyn_m, Pb_atma, Pcas_atmg, Bo_m3m3, gamma_oil, dcas_mm, tr_HydCor, dtub_mm, Tav, Zav, False)
 End Function
@@ -2399,7 +2399,7 @@ Private Function Pfd_Ld(PinD As Double, _
  Dim P1 As Double:
  Dim P2 As Double:
  Dim l As Double
- Dim P As Double
+ Dim p As Double
  
  P2 = 0
  P1 = PinD
@@ -2409,17 +2409,17 @@ Private Function Pfd_Ld(PinD As Double, _
  ' search sollution
  Do
   'i = i + 1
-  P = (P2 + P1) / 2
+  p = (P2 + P1) / 2
   
   Select Case tr_HydCor
    Case 2, 3, 4
-    l = Lgd_Pind_Ro(PinD, P, vsgb_0, Bo_m3m3, PscD, tr_HydCor, QgMeasured)
+    l = Lgd_Pind_Ro(PinD, p, vsgb_0, Bo_m3m3, PscD, tr_HydCor, QgMeasured)
   End Select
   If (Abs(l - Lind) < 0.0001) Or Abs(P1 - P2) < 0.0000001 Then Exit Do ' определиться с точностью !!!
-  If l < Lind Then P1 = P Else P2 = P      ' можно в итоге применить и линейную интерполяцию !!!
+  If l < Lind Then P1 = p Else P2 = p      ' можно в итоге применить и линейную интерполяцию !!!
  Loop
  
- Pfd_Ld = P
+ Pfd_Ld = p
  
  If Abs(P1 - P2) < 0.0000001 Then
      Pfd_Ld = 0
@@ -2790,49 +2790,49 @@ End Function
 '**************************************************************************************
 Private Function Log_Ro_P_calc(vgD As Double, c0 As Double, Bo_m3m3 As Double, P1D As Double, P2D As Double, _
                                PscD As Double) As Double
-Dim a As Double, B As Double, c As Double, d As Double, E As Double, f As Double
+Dim a As Double, B As Double, c As Double, d As Double, E As Double, F As Double
 a = Bo_m3m3 - PscD
 B = (1 - Bo_m3m3)
 c = (c0 - 1) * vgD
 d = 1
 E = c0 * vgD
-f = 1
+F = 1
 Dim res As Double
 If Bo_m3m3 > 1 Then
-    res = (-Log(a + B * P2D) * f * a * d + Log(a + B * P2D) * E * B * d - _
-        Log(c + d * P2D) * E * B * d + Log(c + d * P2D) * c * f * B + _
-        Log(a + B * P1D) * f * a * d - Log(a + B * P1D) * E * B * d + _
-        Log(c + d * P1D) * E * B * d - Log(c + d * P1D) * c * f * B) _
+    res = (-Log(a + B * P2D) * F * a * d + Log(a + B * P2D) * E * B * d - _
+        Log(c + d * P2D) * E * B * d + Log(c + d * P2D) * c * F * B + _
+        Log(a + B * P1D) * F * a * d - Log(a + B * P1D) * E * B * d + _
+        Log(c + d * P1D) * E * B * d - Log(c + d * P1D) * c * F * B) _
         / (-d * a + B * c) / B / d
     Log_Ro_P_calc = res * Bo_m3m3 * (1 - PscD)
 Else
-    res = ((P2D - P1D) * f * d + Log((c + d * P2D) / (c + d * P1D)) _
-              * (E * d - c * f)) / d / d
+    res = ((P2D - P1D) * F * d + Log((c + d * P2D) / (c + d * P1D)) _
+              * (E * d - c * F)) / d / d
     Log_Ro_P_calc = res
 End If
 End Function
 Private Function Log_Ro_P_calc_down(vgD As Double, c0 As Double, Bo_m3m3 As Double, P1D As Double, P2D As Double, _
                                PscD As Double, wc_perc As Double, gamma_gas As Double) As Double
-Dim a As Double, B As Double, c As Double, d As Double, E As Double, f As Double
+Dim a As Double, B As Double, c As Double, d As Double, E As Double, F As Double
 a = (Bo_m3m3 - 1) * (1 - wc_perc) + (1 - PscD) * (1 - wc_perc + Bo_m3m3 / gamma_gas * wc_perc)
 B = (1 - Bo_m3m3) * (1 - wc_perc)
 c = (c0 - 1) * vgD
 d = 1 - c
 E = c0 * vgD
-f = 1 - E
+F = 1 - E
 Dim res As Double
 If Bo_m3m3 > 1 Then
-    res = (-Log(a + B * P2D) * f * a * d + Log(a + B * P2D) * E * B * d - _
-        Log(c + d * P2D) * E * B * d + Log(c + d * P2D) * c * f * B + _
-        Log(a + B * P1D) * f * a * d - Log(a + B * P1D) * E * B * d + _
-        Log(c + d * P1D) * E * B * d - Log(c + d * P1D) * c * f * B) _
+    res = (-Log(a + B * P2D) * F * a * d + Log(a + B * P2D) * E * B * d - _
+        Log(c + d * P2D) * E * B * d + Log(c + d * P2D) * c * F * B + _
+        Log(a + B * P1D) * F * a * d - Log(a + B * P1D) * E * B * d + _
+        Log(c + d * P1D) * E * B * d - Log(c + d * P1D) * c * F * B) _
         / (-d * a + B * c) / B / d
     Log_Ro_P_calc_down = -res * Bo_m3m3 * (1 - PscD)
 Else
 ''  If bo_m3m3 > 1 Then
   
-    res = ((P2D - P1D) * f * d + Log((c + d * P2D) / (c + d * P1D)) _
-              * (E * d - c * f)) / d / d
+    res = ((P2D - P1D) * F * d + Log((c + d * P2D) / (c + d * P1D)) _
+              * (E * d - c * F)) / d / d
     Log_Ro_P_calc_down = -res * ((1 - wc_perc) + 1 / gamma_gas * wc_perc)
 End If
 End Function

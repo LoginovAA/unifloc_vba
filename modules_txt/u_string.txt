@@ -22,17 +22,17 @@ Public Function FormatInteger(i As Long, W As Long) As String
         FormatInteger = tmp
     End If
 End Function
-Public Function FormatFReal(r As Double, W As Long, P As Long) As String
+Public Function FormatFReal(r As Double, W As Long, p As Long) As String
     Dim tmp
-    tmp = Format(r, "0." & String(P, "0"))
+    tmp = Format(r, "0." & String(p, "0"))
     Do While Len(tmp) < W
         tmp = " " & tmp
     Loop
     FormatFReal = tmp
 End Function
-Public Function FormatEReal(r As Double, W As Long, P As Long) As String
+Public Function FormatEReal(r As Double, W As Long, p As Long) As String
     Dim tmp
-    tmp = Format(r, "0." & String(P, "0") & "E+0")
+    tmp = Format(r, "0." & String(p, "0") & "E+0")
     Do While Len(tmp) < W
         tmp = " " & tmp
     Loop
