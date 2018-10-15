@@ -25,6 +25,24 @@
 
 Для построение КРД в PipeSim задавались следующими параметрами:
 
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture1.PNG)
+
+Для лучшей совместимости задавались газосодержанием при давлении насыщения,
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture2.PNG)
+
+Устьевой и пластовой температурой, длиной и диаметром НКТ
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture3.PNG)
+
+Для линейного распределения температуры увеличили U-value multiplier до 30
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture4.PNG)
+
+Как и в макросах используем корреляцию Ансари
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture5.PNG)
+
+Задаемся устьевым давлением и дебитом, а также строим кривые для различных ГФ
+![Image alt](https://github.com/khabibullinra/unifloc_vba/blob/artem/%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/Capture6.PNG)
+
+
 ### Контакты ###
 
 * Хабибуллин Ринат
