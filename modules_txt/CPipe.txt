@@ -616,7 +616,7 @@ End Function
 '=================================================================================================
 ' новый подход - можно обойтись без разделение на прямой участок и кривой - расчет за один проход.
 '=================================================================================================
-Public Function CalcGrad(L_m As Double, P_atma As Double, T_C As Double, Optional calc_dtdl As Boolean = True) As PIPE_FLOW_PARAMS
+Public Function CalcGrad(L_m As Double, p_atma As Double, T_C As Double, Optional calc_dtdl As Boolean = True) As PIPE_FLOW_PARAMS
 ' функция расчета градиента давления и температуры в скважине при заданных параметрах
 ' возвращает все параметры потока в заданной точке трубы при заданых термобарических условиях.
 '
@@ -651,10 +651,10 @@ rough_m = RoughnessZ(L_m)       ' определяем шероховатость на заданной глубине
 Hv_m = HvertZ(L_m)              ' определяем вертикальную глубину для заданной измеренной глубины
 With Fluid
   'проверим на корректность исходных данных
-  If P_atma < const_minPpipe_atma Then Exit Function
+  If p_atma < const_minPpipe_atma Then Exit Function
   
   ' найдем все PVT в заданных условиях
-  Call .Calc_PVT(P_atma, T_C)
+  Call .Calc_PVT(p_atma, T_C)
   If .Qmix_m3day = 0 Then
         T_C = p_AmbientForm.AmbTemp_С(L_m)
   End If
@@ -662,7 +662,7 @@ With Fluid
   If Param.correlation = BeggsBriilCor Then
         
           dp_dl_arr = unf_BegsBrillGradient(d_m, theta_deg, rough_m, .Qliq_rc_m3day, .Qgas_rc_m3day, .MuLiq_rc_cP, .Mug_cP, .sigma_liq_Nm, _
-                                .rho_liq_kgm3, .rho_gas_kgm3, 0, 1, betta_grav, betta_fric)
+                                .rho_liq_kgm3, .rho_gas_kgm3, 0, 1, betta_grav, betta_fric, p_atma)
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
           dpdlf_out = dp_dl_arr(2)
@@ -674,7 +674,7 @@ With Fluid
           
   ElseIf Param.correlation = AnsariCor Then
           dp_dl_arr = unf_AnsariGradient(d_m, theta_deg, rough_m, .Qliq_rc_m3day, .Qgas_rc_m3day, .MuLiq_rc_cP, .Mug_cP, .sigma_liq_Nm, _
-                                .rho_liq_kgm3, .rho_gas_kgm3, P_atma, , betta_grav, betta_fric)
+                                .rho_liq_kgm3, .rho_gas_kgm3, p_atma, , betta_grav, betta_fric)
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
           dpdlf_out = dp_dl_arr(2)
@@ -685,7 +685,7 @@ With Fluid
           fpat_out = dp_dl_arr(7)
   ElseIf Param.correlation = UnifiedCor Then
           dp_dl_arr = unf_UnifiedTUFFPGradient(d_m, theta_deg, rough_m, .Qliq_rc_m3day, .Qgas_rc_m3day, .MuLiq_rc_cP, .Mug_cP, .sigma_liq_Nm, _
-                                .rho_liq_kgm3, .rho_gas_kgm3, P_atma, , betta_grav, betta_fric)
+                                .rho_liq_kgm3, .rho_gas_kgm3, p_atma, , betta_grav, betta_fric)
                                     
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
@@ -697,7 +697,7 @@ With Fluid
           fpat_out = dp_dl_arr(7)
           
   ElseIf Param.correlation = Gray Then
-          dp_dl_arr = unf_GrayModifiedGradient(d_m, theta_deg, rough_m, .Qliq_rc_m3day, .Qgas_rc_m3day, .MuLiq_rc_cP, .Mug_cP, .sigma_liq_Nm, _
+          dp_dl_arr = unf_GrayModifiedGradient(p_atma, T_C, d_m, theta_deg, rough_m, .Qliq_rc_m3day, .Qgas_rc_m3day, .MuLiq_rc_cP, .Mug_cP, .sigma_liq_Nm, _
                                 .rho_liq_kgm3, .rho_gas_kgm3, 0, 1, , betta_grav, betta_fric)
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
@@ -710,7 +710,7 @@ With Fluid
           
   ElseIf Param.correlation = HagedornBrown Then
           dp_dl_arr = unf_HagedornandBrawnmodified(d_m, theta_deg, rough_m, .Qliq_rc_m3day, .Qgas_rc_m3day, .MuLiq_rc_cP, .Mug_cP, .sigma_liq_Nm, _
-                                .rho_liq_kgm3, .rho_gas_kgm3, P_atma, 0, 1, , betta_grav, betta_fric)
+                                .rho_liq_kgm3, .rho_gas_kgm3, p_atma, 0, 1, , betta_grav, betta_fric)
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
           dpdlf_out = dp_dl_arr(2)
@@ -721,8 +721,8 @@ With Fluid
           fpat_out = dp_dl_arr(7)
           
   ElseIf Param.correlation = SakharovMokhov Then
-          dp_dl_arr = unf_Saharov_Mokhov_Gradient(d_m, theta_deg, rough_m, P_atma, .Qo_scm3day, .Qw_scm3day, .Qgas_scm3day, .Bo_m3m3, _
-                                    .Bw_m3m3, .Bg_m3m3, .Rs_m3m3, .Muo_cP, .Muw_cP, .Mug_cP, .sigma_o_Nm, .sigma_w_Nm, .RhoOil_sckgm3, .rhoWat_sckgm3, .rhoGas_sckgm3, _
+          dp_dl_arr = unf_Saharov_Mokhov_Gradient(d_m, theta_deg, rough_m, p_atma, .Qo_scm3day, .Qw_scm3day, .Qgas_scm3day, .Bo_m3m3, _
+                                    .Bw_m3m3, .Bg_m3m3, .rs_m3m3, .Muo_cP, .Muw_cP, .Mug_cP, .sigma_o_Nm, .sigma_w_Nm, .RhoOil_sckgm3, .rhoWat_sckgm3, .rhoGas_sckgm3, _
                                     , , , betta_grav, betta_fric)
           dp_dl = dp_dl_arr(0)
           dpdlg_out = dp_dl_arr(1)
@@ -740,7 +740,7 @@ With Fluid
   ' для оценки температуры оценим скорость потока и ускорение
   
   ' теперь зададим изменение температуры в потоке
-  If calc_dtdl Then
+  If Not calc_dtdl Then
     Select Case Param.tempMethod
           Case StartEndTemp
               dt_dl = dTdLlinear_Cm(Hv_m)  '  p_dTdLinit 'TempGradLinear '* sind(theta_deg)
@@ -748,7 +748,7 @@ With Fluid
               dt_dl = dTdLamb_Cm(Hv_m)  ' p_AmbientForm.AmbTempGrad_Cm(Hv_m) * sind(theta_deg)
           Case AmbientTemp
               v = vg_msec    ' оценка сверху
-              dvdL = -v / P_atma * dp_dl
+              dvdL = -v / p_atma * dp_dl
               dt_dl = -p_AmbientForm.Calc_dTdL_Cm(Hv_m, sind(theta_deg), T_C, .Wm_kgsec, .Cmix_JkgC, _
                                                       dp_dl, v, dvdL, .CJT_Katm)
     End Select
@@ -770,13 +770,13 @@ With Fluid
          res.gasfrac = Fluid.GasFraction_d()
          res.h_l_d = h_l_out                            ' liquid hold up
          res.Qg_m3day = Fluid.Qgas_m3day
-         res.P_atma = P_atma                              '  pipe pressure at measured depth
+         res.p_atma = p_atma                              '  pipe pressure at measured depth
          res.T_C = T_C                                  ' pipe temp at measured depth
          res.v_sl_msec = v_sl_out                       ' superficial liquid velosity
          res.v_sg_msec = v_sg_out                       ' superficial gas velosity
          res.thete_deg = theta_deg                      '
          res.roughness_m = rough_m                      '
-         res.Rs_m3m3 = Fluid.Rs_m3m3                    ' растворенный газ в нефти в потоке
+         res.rs_m3m3 = Fluid.rs_m3m3                    ' растворенный газ в нефти в потоке
          res.gasfrac = Fluid.GasFraction_d              ' расходное содержание газа в потоке
          res.Muo_cP = Fluid.Muo_cP                      ' вязкость нефть в потоке
          res.Muw_cP = Fluid.Muw_cP                      ' вязкость воды в потоке
@@ -833,7 +833,7 @@ Dim stPt As Boolean
 On Error GoTo err1:
     eps = 0.01
     Step = 10
-    Y0(0) = PT.P_atma
+    Y0(0) = PT.p_atma
     Y0(1) = PT.T_C
     N = 2                   ' размер системы  - две переменные - давление и температура
     M = p_HmCurve.numPoints ' количество точек для которых надо выдать ответ
@@ -879,7 +879,7 @@ On Error GoTo err1:
     ' ODE = YA2
     
     ' подговим выходные результаты функции
-    Calc_dPipe_2d.P_atma = Y(M - 1, 0)
+    Calc_dPipe_2d.p_atma = Y(M - 1, 0)
     Calc_dPipe_2d.T_C = Y(M - 1, 1)
     If saveCurve > 0 Then
     ' сохраним результаты расчета для отображения на графиках
@@ -921,9 +921,9 @@ Dim pfp As PIPE_FLOW_PARAMS
 Dim Rep As ODESolverReport
 Dim stPt As Boolean
 On Error GoTo err1:
-    eps = 0.001
+    eps = 0.1
     Step = 10
-    Y0(0) = PT.P_atma
+    Y0(0) = PT.p_atma
     
 '    Y0(1) = PT.T_C
     N = 1                   ' размер системы  - одна переменные - давление и температура
@@ -968,7 +968,7 @@ On Error GoTo err1:
     ' ODE = YA2
     
     ' подговим выходные результаты функции
-    Calc_dPipe_1d.P_atma = Y(M - 1, 0)
+    Calc_dPipe_1d.p_atma = Y(M - 1, 0)
     Calc_dPipe_1d.T_C = Tinit_C(X(M - 1))
     If saveCurve > 0 Then
     ' сохраним результаты расчета для отображения на графиках
@@ -1050,7 +1050,7 @@ Dim FlowParams_out As PIPE_FLOW_PARAMS
         c_ThetaCurve.AddPoint .md_m, .thete_deg
         c_RoughnessCurve.AddPoint .md_m, .roughness_m
         
-        c_RsCurve.AddPoint .md_m, .Rs_m3m3
+        c_RsCurve.AddPoint .md_m, .rs_m3m3
         c_gasfracCurve.AddPoint .md_m, .gasfrac
         c_muoCurve.AddPoint .md_m, .Muo_cP
         c_muwCurve.AddPoint .md_m, .Muw_cP
@@ -1107,7 +1107,7 @@ Dim i As Integer
     For i = LBound(p_FlowParams_out) To UBound(p_FlowParams_out)
      With p_FlowParams_out(i)
         c_HvertCurve.AddPoint .md_m, .vd_m
-        c_PCurve.AddPoint .md_m, .P_atma
+        c_PCurve.AddPoint .md_m, .p_atma
         c_TCurve.AddPoint .md_m, .T_C
         c_dpdl_gCurve.AddPoint .md_m, .dpdl_g_atmm
         c_dpdl_fCurve.AddPoint .md_m, .dpdl_f_atmm
@@ -1119,7 +1119,7 @@ Dim i As Integer
         c_ThetaCurve.AddPoint .md_m, .thete_deg
         c_RoughnessCurve.AddPoint .md_m, .roughness_m
         
-        c_RsCurve.AddPoint .md_m, .Rs_m3m3
+        c_RsCurve.AddPoint .md_m, .rs_m3m3
         c_gasfracCurve.AddPoint .md_m, .gasfrac
         c_muoCurve.AddPoint .md_m, .Muo_cP
         c_muwCurve.AddPoint .md_m, .Muw_cP

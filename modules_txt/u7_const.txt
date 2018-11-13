@@ -253,6 +253,10 @@ Public Enum PVT_CORRELATION
     McCainBased = 1 '
     StraigthLine = 2
 End Enum
+Public Enum Z_CORRELATION
+    z_BB = 0
+    z_Dranchuk = 1
+End Enum
 ' 0 - считаем от меньшего давления к наибольшему, по умолчанию.Например,
 ' от устьевого давления считаем против потока до забойного давления
 ' todo заменить объявление и использование
@@ -290,7 +294,7 @@ End Type
 ' тип для описания термобарических условий  (для расчетов)
 ' используется для передачи данных. Поддерживает только один вариант размерности
 Public Type PTtype
-    P_atma As Double
+    p_atma As Double
     T_C As Double
 End Type
 ' тип для описания параметров работы электрического двигателя
@@ -311,7 +315,7 @@ End Type
 Public Type PIPE_FLOW_PARAMS
   md_m As Double         ' pipe measured depth (from start - top)
   vd_m As Double         ' pipe vertical depth from start - top
-  P_atma As Double        ' pipe pressure at measured depth
+  p_atma As Double        ' pipe pressure at measured depth
   T_C As Double          ' pipe temp at measured depth
   
   dp_dl As Double
@@ -327,7 +331,7 @@ Public Type PIPE_FLOW_PARAMS
   thete_deg As Double
   roughness_m As Double
   
-  Rs_m3m3 As Double         ' растворенный газ в нефти в потоке
+  rs_m3m3 As Double         ' растворенный газ в нефти в потоке
   gasfrac As Double         ' расходное содержание газа в потоке
   
   Muo_cP As Double          ' вязкость нефть в потоке
@@ -399,16 +403,16 @@ Public Function ParamCalcFromBottom(Optional hcor As H_CORRELATION = AnsariCor, 
     ParamCalcFromBottom.tempMethod = TempMeth
 End Function
 Public Function SumPT(PT1 As PTtype, PT2 As PTtype) As PTtype
-    SumPT.P_atma = PT1.P_atma + PT2.P_atma
+    SumPT.p_atma = PT1.p_atma + PT2.p_atma
     SumPT.T_C = PT1.T_C + PT2.T_C
 End Function
 Public Function SubtractPT(PT1 As PTtype, PT2 As PTtype) As PTtype
-    SubtractPT.P_atma = PT1.P_atma - PT2.P_atma
+    SubtractPT.p_atma = PT1.p_atma - PT2.p_atma
     SubtractPT.T_C = PT1.T_C - PT2.T_C
 End Function
-Public Function SetPT(ByVal p As Double, ByVal t As Double) As PTtype
-    SetPT.P_atma = p
-    SetPT.T_C = t
+Public Function SetPT(ByVal p As Double, ByVal T As Double) As PTtype
+    SetPT.p_atma = p
+    SetPT.T_C = T
 End Function
 Public Sub RangeChange(rng1, sheet, target)
   ' процедура для обеспечения синхронного изменения ячеек

@@ -172,7 +172,7 @@ Private Sub FillCurvePT()
     Next
 End Sub
 ' метод расчета работы насоса
-Public Sub Calc_ESP(P_atma As Double, Tin_C As Double, Optional Tdis_C As Double = 0, _
+Public Sub Calc_ESP(p_atma As Double, Tin_C As Double, Optional Tdis_C As Double = 0, _
                         Optional calc_from_intake As Boolean = True)
     
     Dim pmp As CESPpump
@@ -183,14 +183,14 @@ Public Sub Calc_ESP(P_atma As Double, Tin_C As Double, Optional Tdis_C As Double
     Dim numSt As Integer
     Dim numStAll As Integer
     
-    dPumpSum = SetPT(p:=0, t:=0)
+    dPumpSum = SetPT(p:=0, T:=0)
     ' подготовим массив по распределению температур
     ReDim Tin_i_C(p_Pumps.count)
     ReDim Tdis_i_C(p_Pumps.count)
     numStAll = StageNum
     numSt = 0
-    Pin_i = P_atma
-    Pdis_i = P_atma
+    Pin_i = p_atma
+    Pdis_i = p_atma
     For i = 0 To p_Pumps.count - 1
         Set pmp = p_Pumps(i + 1)
         Tin_i_C(i) = Tin_C + (Tdis_C - Tin_C) * numSt / numStAll
@@ -203,9 +203,9 @@ Public Sub Calc_ESP(P_atma As Double, Tin_C As Double, Optional Tdis_C As Double
             Call pmp.Calc_ESP(Pin_i, Tin_i_C(i), Tdis_i_C(i))         ' ищем изменение термобарических условий
             Pin_i = pmp.Pdis_atma
         Next i
-        p_PTdis.P_atma = Pin_i
+        p_PTdis.p_atma = Pin_i
         p_PTdis.T_C = Tdis_C
-        p_PTintake.P_atma = P_atma
+        p_PTintake.p_atma = p_atma
         p_PTintake.T_C = Tin_C
     
     Else
@@ -214,9 +214,9 @@ Public Sub Calc_ESP(P_atma As Double, Tin_C As Double, Optional Tdis_C As Double
             Call pmp.Calc_ESP(Pdis_i, Tin_i_C(i), Tdis_i_C(i))        ' ищем изменение термобарических условий
             Pdis_i = pmp.Pintake_atma
         Next i
-        p_PTdis.P_atma = P_atma
+        p_PTdis.p_atma = p_atma
         p_PTdis.T_C = Tdis_C
-        p_PTintake.P_atma = Pdis_i
+        p_PTintake.p_atma = Pdis_i
         p_PTintake.T_C = Tin_C
     End If
      

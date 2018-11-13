@@ -110,16 +110,16 @@ End If
 End Function
 Private Function GetFirstPointNo(ByVal X As Double) As Integer
  Dim i As Integer
- Dim F As Boolean
+ Dim f As Boolean
  
     i = 0
-    F = True
-    While F
-        F = False
+    f = True
+    While f
+        f = False
         If i < FkPoint - 1 Then
             If X > FPoints(i).X Then
                 i = i + 1
-                F = True
+                f = True
             End If
         End If
     Wend
@@ -305,7 +305,7 @@ Public Sub AddPoint(ByVal X As Double, ByVal Y As Double, Optional isStable As B
      Dim i, N As Integer
      Dim CheckMinMaxY As Boolean
      Dim tp As TDPoint
-     Dim F As Boolean
+     Dim f As Boolean
      
      N = TestPoint(X)
      If N >= 0 Then ' если аргумент уже есть в массиве
@@ -335,16 +335,16 @@ Public Sub AddPoint(ByVal X As Double, ByVal Y As Double, Optional isStable As B
      FkPoint = FkPoint + 1
      If FkPoint > 1 Then
         i = FkPoint - 1
-        F = True
-        While F
-            F = False
+        f = True
+        While f
+            f = False
             If i > 0 Then
                 If FPoints(i - 1).X > FPoints(i).X Then
                     tp = FPoints(i)
                     FPoints(i) = FPoints(i - 1)
                     FPoints(i - 1) = tp
                     i = i - 1
-                    F = True
+                    f = True
                 End If
             End If
         Wend

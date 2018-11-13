@@ -689,7 +689,7 @@ End Function
 Public Function Get_Max_RateForGraph_m3day() As Double
     Get_Max_RateForGraph_m3day = (p_Frequency_Hz / esp_Frequency_Hz) * ESP_maxRate_m3day  ';const_convert_bbl_m3day *
 End Function
-Sub ESP_dPIntegration(ByVal P_atma, ByVal Tin_C, Optional Tdis_C As Double = 0, _
+Sub ESP_dPIntegration(ByVal p_atma, ByVal Tin_C, Optional Tdis_C As Double = 0, _
                            Optional calc_from_dis As Boolean = False, _
                            Optional saveCurve As Boolean = False, Optional ESPtype As Integer = 0)
     ' ‘ункци€ расчете распределени€ давлени€ в ”Ё÷Ќ - расчет снизу вверх от входного давлени€ до выходного
@@ -718,14 +718,14 @@ Sub ESP_dPIntegration(ByVal P_atma, ByVal Tin_C, Optional Tdis_C As Double = 0, 
     
     If calc_from_dis Then
         Tst_C = Tdis_C
-        p_Pdis_atma = P_atma
+        p_Pdis_atma = p_atma
         sign_int = -1
     Else
         Tst_C = Tin_C
-        p_Pintake_atma = P_atma
+        p_Pintake_atma = p_atma
         sign_int = 1
     End If
-    Pst_atma = P_atma
+    Pst_atma = p_atma
     dTpumpSum_C = 0
     p_HeadReal_m = 0
     p_Tintake_C = Tin_C
@@ -801,7 +801,7 @@ Sub ESP_dPIntegration(ByVal P_atma, ByVal Tin_C, Optional Tdis_C As Double = 0, 
                 c_PowerFluidInPumpCurve.AddPoint i + 1, PowFluid_Wt
                 c_PowerESPInPumpCurve.AddPoint i + 1, PowESP_Wt
                 c_EffESPInPumpCurve.AddPoint i + 1, EffESP_d
-                c_PCurve.AddPoint HmesStage_m(i + 1), P_atma
+                c_PCurve.AddPoint HmesStage_m(i + 1), p_atma
                 c_TCurve.AddPoint HmesStage_m(i + 1), Tst_C
             End If
         Next i
@@ -850,13 +850,13 @@ Public Function Calc_ESP_NumStages(Qmix_m3day As Double, Head_m As Double) As In
     End If
 End Function
 ' метод расчета работы насоса
-Public Sub Calc_ESP(P_atma As Double, Tin_C As Double, Optional Tdis_C As Double = 0, _
+Public Sub Calc_ESP(p_atma As Double, Tin_C As Double, Optional Tdis_C As Double = 0, _
                         Optional calc_from_intake As Boolean = True, Optional ESPtype As Integer = 0)
     
     'p_Pintake_atma = PT.P_atma
     'p_Pdis_atma = p_Pintake_atma + ESP_dPIntegration(PT.P_atma, PT.T_C, Tdis_C)
     ' сохраним результат
-    Call ESP_dPIntegration(P_atma, Tin_C, Tdis_C, Not calc_from_intake, , ESPtype)
+    Call ESP_dPIntegration(p_atma, Tin_C, Tdis_C, Not calc_from_intake, , ESPtype)
 '    If Not calc_from_intake And Abs(Pint_estimation - p_Pintake_atma) > 10 Then
 '        ' добавим вторую итерацию, чтобы улучшить приближение по деградации
 '        Pint_estimation = p_Pintake_atma

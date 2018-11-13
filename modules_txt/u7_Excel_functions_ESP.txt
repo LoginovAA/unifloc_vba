@@ -107,7 +107,7 @@ Public Function ESP_IDbyRate(Q As Double)
     If Q > 1200 Then ESP_IDbyRate = 264
     
 End Function
-Public Function ESP_dP_atma(P_atma As Double, Qliq_m3day As Double, WCT_perc As Double, _
+Public Function ESP_dP_atma(p_atma As Double, Qliq_m3day As Double, WCT_perc As Double, _
                         Optional NumStages As Integer = 1, Optional freq As Double = 50, _
                         Optional PumpID = 674, _
                         Optional gamma_gas = const_gamma_gas_default, _
@@ -150,7 +150,7 @@ Public Function ESP_dP_atma(P_atma As Double, Qliq_m3day As Double, WCT_perc As 
     Fluid.Qliq_scm3day = Qliq_m3day
     Fluid.wc_perc = WCT_perc
     
-    If PKsep_atma < 0 Then PKsep_atma = P_atma
+    If PKsep_atma < 0 Then PKsep_atma = p_atma
     If TKsep_C < 0 Then TKsep_C = Tin_C
     If Ksep_fr > 0 And Ksep_fr <= 1 Then
         Call Fluid.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasnotGoesIntoSolution)
@@ -162,7 +162,7 @@ Public Function ESP_dP_atma(P_atma As Double, Qliq_m3day As Double, WCT_perc As 
     ESP.StageNum = NumStages
     ESP.PressureDegradation = Kdegr
     
-    Call ESP.Calc_ESP(P_atma, Tin_C, Tdis_C, CalcFromIntake, GasDegtType)
+    Call ESP.Calc_ESP(p_atma, Tin_C, Tdis_C, CalcFromIntake, GasDegtType)
     
     ESP_dP_atma = Array(ESP.Pdis_atma - ESP.Pintake_atma, ESP.Tdischarge_C - ESP.Tintake_c)
 End Function

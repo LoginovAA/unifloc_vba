@@ -195,19 +195,19 @@ Public Function Calc_Pdis_Pin_atma(PTin As PTtype, Optional dTpump_C As Double =
     If (Ksep_d = 0) Or (Ksep_d > 1) Then
         Set p_FluidPump = p_Fluid
     ElseIf Ksep_d > 0 Then
-        Set p_FluidPump = p_Fluid.GetCloneModAfterSeparation(PTin.P_atma, PTin.T_C, Ksep_d)
+        Set p_FluidPump = p_Fluid.GetCloneModAfterSeparation(PTin.p_atma, PTin.T_C, Ksep_d)
     Else
 '        Ksep_d = p_GasSeparator.Calc_Separation(PTin)           ' получили сепарацию и модифицированные флюид
-        Set p_FluidPump = p_Fluid.GetCloneModAfterSeparation(PTin.P_atma, PTin.T_C, Ksep_d)
+        Set p_FluidPump = p_Fluid.GetCloneModAfterSeparation(PTin.p_atma, PTin.T_C, Ksep_d)
     End If
     ' здесь флюид готов - можнос считать, что получится с установкой
-    p_FluidPump.Calc_PVT PTin.P_atma, PTin.T_C
+    p_FluidPump.Calc_PVT PTin.p_atma, PTin.T_C
     p_GasFraction = p_FluidPump.GasFraction_d()
     p_Pumps.PressureDegradation = GasCorrection_d(p_GasFraction)
     If p_Pumps.StageNum > 0 Then
         Set p_Pumps.Fluid = p_FluidPump              ' сохранили модифицированный флюид в насосе
         ' 1. рассчитаем перепад давления в насосе
-        Call p_Pumps.Calc_ESP(PTin.P_atma, PTin.T_C, PTin.T_C + dTpump_C)                      ' рассчитали перепад давления в насосе
+        Call p_Pumps.Calc_ESP(PTin.p_atma, PTin.T_C, PTin.T_C + dTpump_C)                      ' рассчитали перепад давления в насосе
         ' 2. оценим мощность потребляемую газосепаратором
         p_M_Nm = p_GasSeparator.M_Nm + p_Pumps.M_Nm
         ' 3. получим момент на валу, который должен выдавать двигатель
@@ -232,7 +232,7 @@ Public Function Calc_Pdis_Pin_atma(PTin As PTtype, Optional dTpump_C As Double =
     End If
   '  PT = PTintake_temp
 End Function
-Function Calc_ESP_dP_atma(P_atma As Double, Tin_C As Double, Optional ByRef Tdis_C As Double, Optional calc_dir As Integer = 1)
+Function Calc_ESP_dP_atma(p_atma As Double, Tin_C As Double, Optional ByRef Tdis_C As Double, Optional calc_dir As Integer = 1)
  
 End Function
 Public Property Get PressureDegradation() As Double

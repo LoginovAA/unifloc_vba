@@ -13,6 +13,18 @@ Option Explicit
 '
 '=======================================================================================
 ' расчет корреляции Ансари
+'Private p_Fluid As CPVT
+'Private Sub Class_Initialize()
+'Set p_Fluid = New CPVT
+'End Sub
+'Public Property Get Fluid() As CPVT
+'Set Fluid = p_Fluid
+'End Property
+'Public Property Set Fluid(val As CPVT)
+'Set p_Fluid = val
+   'p_Calculated = False
+'End Property
+  
 Const c_p = 0.000009871668    ' переводной коэффициент
  
 Public Function unf_AnsariGradient(ByVal arr_d_m As Double, _
@@ -22,7 +34,7 @@ Public Function unf_AnsariGradient(ByVal arr_d_m As Double, _
                                   ByVal sigma_l_Nm As Double, _
                                   ByVal rho_lrc_kgm3 As Double, _
                                   ByVal rho_grc_kgm3 As Double, _
-                                  ByVal P_atma As Double, _
+                                  ByVal p_atma As Double, _
                                   Optional ByVal ZNLF As Boolean = False, _
                                   Optional betta_grav As Double = 1, _
                                   Optional betta_fric As Double = 1)
@@ -50,7 +62,7 @@ Public Function unf_AnsariGradient(ByVal arr_d_m As Double, _
  Dim timeStamp
  
  timeStamp = Time()
- roughness_d = eps_m / arr_d_m
+ roughness_d = eps_m '/ arr_d_m
  Ap_m2 = const_Pi * arr_d_m ^ 2 / 4
  lambda_l = Ql_rc_m3day / (Ql_rc_m3day + Qg_rc_m3day)
  Vsl_msec = const_conver_sec_day * Ql_rc_m3day / Ap_m2
@@ -64,7 +76,7 @@ Public Function unf_AnsariGradient(ByVal arr_d_m As Double, _
     ang1 = 90
     addLogMsg "AnsariGradient: угол arr_theta_deg = " & arr_theta_deg & " больше 90 град. При расчете градиента использован угол 90 гр"
  End If
- Call ansari(ang1, arr_d_m, roughness_d, P_atma, Vsl_msec, Vsg_msec, lambda_l, rho_grc_kgm3, rho_lrc_kgm3, Mug_rc_cP, Mul_rc_cP, _
+ Call ansari(ang1, arr_d_m, roughness_d, p_atma, Vsl_msec, Vsg_msec, lambda_l, rho_grc_kgm3, rho_lrc_kgm3, Mug_rc_cP, Mul_rc_cP, _
                     sigma_l_Nm, _
                     Hl_out_fr, pgf_out_atmm, pge_out_atmm, pga_out_atmm, pgt_out_atmm, fpat_out_num, , ierr)
   
@@ -166,7 +178,7 @@ End Function
 '      vsl   = superficial liquid velocity. (ft/sec)
 '      (*indicates input variables)
 '     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Private Sub ansari(ang, di_m, ed, P_atma, vsl_m3sec, vsg_m3sec, ens, deng_kgm3, denl_kgm3, visg, visl, surl, E, pgf, pge, pga, pgt, fpat, Optional ioerr, Optional ierr, _
+Private Sub ansari(ang, di_m, ed, p_atma, vsl_m3sec, vsg_m3sec, ens, deng_kgm3, denl_kgm3, visg, visl, surl, E, pgf, pge, pga, pgt, fpat, Optional ioerr, Optional ierr, _
             Optional ByVal ZNLF As Boolean = False)
 '  addLogMsg "ansari start"
 'Dim fpat As String * 4
@@ -229,7 +241,7 @@ fpat = "    "
 Dim angr As Double, P_Pa
 angr = ang * 3.1416 / 180#
 'di = di * 0.3048
-P_Pa = P_atma * 101325# '/ 14.7
+P_Pa = p_atma * 101325# '/ 14.7
 'vm = vm * 0.3048
 'deng = deng * 16.0184
 'denl = denl * 16.0184
@@ -421,18 +433,21 @@ visc = visg * alfc + visl * (1# - alfc)
 recs = denc * vsc * di / visc
 ffcs = 16# / recs
 If (recs > 2000#) Then
-    ffcs = 0.0625 / (log10(ed / 3.7 - 5.02 / recs * log10(ed / 3.7 + 13# / recs))) ^ 2
+    'ffcs = 0.0625 / (log10(ed / 3.7 - 5.02 / recs * log10(ed / 3.7 + 13# / recs))) ^ 2
+    ffcs = 0.0625 / (log10(2 * ed / di / 3.7 - 5.02 / recs * log10(2 * ed / di / 3.7 + 13# / recs))) ^ 2
 End If
 rels = denl * vsl * di / visl
 ffls = 16# / rels
 If (rels > 2000#) Then
-    ffls = 0.0625 / (log10(ed / 3.7 - 5.02 / rels * log10(ed / 3.7 + 13# / rels))) ^ 2
+    'ffls = 0.0625 / (log10(ed / 3.7 - 5.02 / rels * log10(ed / 3.7 + 13# / rels))) ^ 2
+    ffls = 0.0625 / (log10(2 * ed / di / 3.7 - 5.02 / rels * log10(2 * ed / di / 3.7 + 13# / rels))) ^ 2
 End If
 If (fe < 0.9999) Then
     relf = denl * vsl * (1 - fe) * di / visl
     fflf = 16# / relf
     If (relf > 2000#) Then
-        fflf = 0.0625 / (log10(ed / 3.7 - 5.02 / relf * log10(ed / 3.7 + 13# / relf))) ^ 2
+        'fflf = 0.0625 / (log10(ed / 3.7 - 5.02 / relf * log10(ed / 3.7 + 13# / relf))) ^ 2
+        fflf = 0.0625 / (log10(2 * ed / di / 3.7 - 5.02 / relf * log10(2 * ed / di / 3.7 + 13# / relf))) ^ 2
     End If
     a = (1# - fe) ^ 2 * (fflf / ffls)
     Else
@@ -604,6 +619,7 @@ pge = den * Sin(angr) * 9.81
 '     ---------------------------------------
 Dim Re, Ff
 Re = di * den * v / vis
+Debug.Print "unf_single1.di =" & di
 Ff = 64# / Re
 If (Re > 2000#) Then
    Ff = 0.25 / (log10(ed / 3.7 - 5.02 / Re * log10(ed / 3.7 + 13# / Re))) ^ 2
@@ -775,7 +791,8 @@ Dim Re, Ff
 Re = den * (vsl + vsg) * di / visns
 Ff = 64# / Re
 If (Re > 2000#) Then
-  Ff = 0.25 / (log10(ed / 3.7 - 5.02 / Re * log10(ed / 3.7 + 13# / Re))) ^ 2
+ 'Ff = 0.25 / (log10(ed / 3.7 - 5.02 / Re * log10(ed / 3.7 + 13# / Re))) ^ 2
+  Ff = 0.25 / (log10(2 * ed / di / 3.7 - 5.02 / Re * log10(2 * ed / di / 3.7 + 13# / Re))) ^ 2
 End If
 pgf = 0.5 * den * Ff * (vsl + vsg) ^ 2 / di
 '     ---------------------------------------------------------
@@ -989,7 +1006,7 @@ LC = (vltbn + vtb) ^ 2 / (2# * 9.81)
 '     ---------------------------------
 '     check for the nature of the flow.
 '     ---------------------------------
-Dim ind, c, d, F, h, alftba, alfsu, esu, dens, pgels
+Dim ind, c, d, f, h, alftba, alfsu, esu, dens, pgels
 If (LC > (0.75 * ltb)) Then
     '        --------------------------------------------------------
     '        developing slug flow exists. calculate new values for
@@ -1000,16 +1017,16 @@ If (LC > (0.75 * ltb)) Then
     c = (vsg - vgls * alfls) / vtb
     d = 1# - vsg / vtb
     E = vtb - vlls
-    F = (-2# * d * c * lls - 2# * (E * (1# - alfls)) ^ 2 / 9.81) / d ^ 2
+    f = (-2# * d * c * lls - 2# * (E * (1# - alfls)) ^ 2 / 9.81) / d ^ 2
     g_ = (c * lls / d) ^ 2
-    h = F * F - 4# * g_
+    h = f * f - 4# * g_
     If (h <= 0#) Then
         addLogMsg "   slug: error in solving for ltb"
         ierr = 1
         GoTo L999
     End If
-    ltb1 = (-F + Sqr(h)) / 2#
-    ltb2 = (-F - Sqr(h)) / 2#
+    ltb1 = (-f + Sqr(h)) / 2#
+    ltb2 = (-f - Sqr(h)) / 2#
     If (ltb1 <= 0# And ltb2 <= 0#) Then
         addLogMsg "   slug: error in ltb root"
         ierr = 1
@@ -1061,7 +1078,8 @@ visns = visl * (1# - alfns) + visg * alfns
 rels = dens * vmls * di / visns
 ffls = 64# / rels
 If (rels > 2000#) Then
-  ffls = 0.25 / (log10(ed / 3.7 - 5.02 / rels * log10(ed / 3.7 + 13# / rels))) ^ 2
+  'ffls = 0.25 / (log10(ed / 3.7 - 5.02 / rels * log10(ed / 3.7 + 13# / rels))) ^ 2
+  ffls = 0.25 / (log10(2 * ed / di / 3.7 - 5.02 / rels * log10(2 * ed / di / 3.7 + 13# / rels))) ^ 2
 End If
 pgfls = dens * vmls ^ 2 * ffls / (2# * di)
 '     --------------------------------------------------------
@@ -1368,36 +1386,36 @@ dx = dxold
 '     ----------------------------------------
 '     call func again to use the guessed value.
 '     ----------------------------------------
-Dim F, j, temp
-Call func(a, B, c, d, E, g_, i, itsafe, F, df)
+Dim f, j, temp
+Call func(a, B, c, d, E, g_, i, itsafe, f, df)
 '     -----------------------------------------------------
 '     carry out iteration by using newton-raphson method
 '     together with bisection approach to keep the variable
 '     within its limits.
 '     -----------------------------------------------------
 For j = 1 To MAXIT
-    If (((itsafe - xh) * df - F) * ((itsafe - xl) * df - F) >= 0# Or Abs(2# * F) > Abs(dxold * df)) Then
+    If (((itsafe - xh) * df - f) * ((itsafe - xl) * df - f) >= 0# Or Abs(2# * f) > Abs(dxold * df)) Then
     dxold = dx
     dx = 0.5 * (xh - xl)
     itsafe = xl + dx
     If (xl = itsafe) Then GoTo L999
     Else
     dxold = dx
-    dx = F / df
+    dx = f / df
     temp = itsafe
     itsafe = itsafe - dx
     If (temp = itsafe) Then GoTo L999
 End If
-If (Abs(dx) < xacc Or Abs(F) < xacc) Then GoTo L999
-Call func(a, B, c, d, E, g_, i, itsafe, F, df)
-If (F < 0#) Then
+If (Abs(dx) < xacc Or Abs(f) < xacc) Then GoTo L999
+Call func(a, B, c, d, E, g_, i, itsafe, f, df)
+If (f < 0#) Then
     xl = itsafe
-    fl = F
+    fl = f
     Else
     xh = itsafe
-    fh = F
+    fh = f
 End If
-If (F = 0#) Then GoTo L999
+If (f = 0#) Then GoTo L999
 L5:
 Next j
 ierr = 1
@@ -1429,7 +1447,7 @@ End Function
 '     a,b,c,d,e and f are input variables that define f.
 '     t"s and dt"s are dummy variables and their derivatives.
 '     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Private Sub func(a, B, c, d, E, g_, i, X, F, df)
+Private Sub func(a, B, c, d, E, g_, i, X, f, df)
 '     ----------------------------------------------------
 '     initialize dummy variables that are repeatedly used.
 '     ----------------------------------------------------
@@ -1448,7 +1466,7 @@ If (i = 1) Then
     '        define f and df to iterate for holdup in bubble.
     '        ------------------------------------------------
     an = 0.5
-    F = c * X ^ an + 1.2 * (a + B) - B / (1# - X)
+    f = c * X ^ an + 1.2 * (a + B) - B / (1# - X)
     df = an * c * X ^ (an - 1#) - B / (1# - X) ^ 2
     ElseIf (i = 2) Then
     '        ------------------------------------------------------
@@ -1469,7 +1487,7 @@ If (i = 1) Then
     t12 = X * t8 - E * t7
     t13 = t9 / t10
     t14 = t11 / t12
-    F = t13 - t14
+    f = t13 - t14
     dt2 = -0.25 * 9.81 * g_ / t2 / Sqr(X)
     dt5 = 9.961 * dt2
     dt6 = -(dt5 * t3 / t4 - (c + t5) / t4)
@@ -1491,7 +1509,7 @@ If (i = 1) Then
     t2 = (1# - 2# * X / a) ^ 2
     t3 = (B * t2 - (B - c) * t1) / t2
     t4 = (t3 * t2 - (d + E)) / (1# - t2)
-    F = X ^ 3 - 0.75 * a * g_ * t4 * (1# - t2)
+    f = X ^ 3 - 0.75 * a * g_ * t4 * (1# - t2)
     dt2 = -4# * (1# - 2# * X / a) / a
     dt3 = (B - c) * t1 * dt2 / t2 ^ 2
     dt4 = (dt3 * t2 + t3 * dt2) / (1# - t2) + (t3 * t2 - (d + E)) * dt2 / (1# - t2) ^ 2
@@ -1504,7 +1522,7 @@ If (i = 1) Then
     z = 1# + c * X
     dt1 = 4# * (1# - 2# * X)
     dz = c
-    F = B - z / t1 / (1# - t1) ^ 2.5 + a / t1 ^ 3
+    f = B - z / t1 / (1# - t1) ^ 2.5 + a / t1 ^ 3
     df = -dz / t1 / (1# - t1) ^ 2.5 - 2.5 * z * dt1 / t1 / (1# - t1) ^ 3.5 + z * dt1 / t1 ^ 2 / (1# - t1) ^ 2.5 - 3# * a / t1 ^ 4 * dt1
     ElseIf (i = 5) Then
     '         -----------------------------------------------------------
@@ -1519,7 +1537,7 @@ If (i = 1) Then
     If (t2 = 1.5) Then X = X + 0.001
     t1 = 1# - (1# - 2# * X) ^ 2
     dt1 = 4# * (1# - 2# * X)
-    F = B - (2# - 1.5 * t1) * a / t1 ^ 3 / (1# - 1.5 * t1)
+    f = B - (2# - 1.5 * t1) * a / t1 ^ 3 / (1# - 1.5 * t1)
     df = 1.5 * dt1 * a / t1 ^ 3 / (1# - 1.5 * t1) + 3# * a * dt1 * (1# - 2# * t1) _
              * (2# - 1.5 * t1) / t1 ^ 4 / (1# - 1.5 * t1) ^ 2
 End If
@@ -2044,8 +2062,8 @@ End Sub
 ' ------------------------------------------------------------            'FRFACT
 '                                                                         'FRFACT
          Dim FGI
-         FGI = 1 / (1.14 - 2 * log10(ed + 21.25 / Re ^ 0.9)) ^ 2          'FRFACT
-'                                                                         'FRFACT
+         'FGI = 1 / (1.14 - 2 * log10(ed + 21.25 / Re ^ 0.9)) ^ 2          'FRFACT
+        FGI = 0.25 / (log10(2 * ed / 0.062 / 3.7 - 5.02 / Re * log10(2 * ed / 0.062 / 3.7 + 13# / Re))) ^ 2
 ' ------------------------------------------------------------            'FRFACT
 '     Set counter. Colebrook Equation is iterative. If convergence        'FRFACT
 '     is not attained in 10 iterations an infinite loop will              'FRFACT
@@ -2053,10 +2071,11 @@ End Sub
 '     determined in the 10 th iteration and use with caution.             'FRFACT
 ' ------------------------------------------------------------            'FRFACT
 '                                                                         'FRFACT
-         Dim i, F, DIFF
+         Dim i, f, DIFF
          i = 1                                                            'FRFACT
-1:        F = 1.14 - 2 * log10(ed + 9.34 / (Re * Sqr(FGI)))               'FRFACT
-         FFM = (1 / F) ^ 2                                                'FRFACT
+'1:        f = 1.14 - 2 * log10(ed + 9.34 / (Re * Sqr(FGI)))
+1:          f = 1.74 - 2 * log10(2 * ed / 0.062 + 18.7 / (Re * Sqr(FGI)))
+         FFM = (1 / f) ^ 2                                                'FRFACT
          DIFF = Abs(FGI - FFM)                                            'FRFACT
          If (DIFF > 0.0001) Then                                          'FRFACT
             FGI = (FGI + FFM) / 2                                         'FRFACT
@@ -2094,7 +2113,7 @@ Public Function unf_BegsBrillGradient(ByVal arr_d_m As Double, _
                                   Optional Payne_et_all_holdup As Integer = 0, _
                                   Optional Payne_et_all_friction As Integer = 1, _
                                   Optional betta_grav As Double = 1, _
-                                  Optional betta_fric As Double = 1)
+                                  Optional betta_fric As Double = 1, Optional p_atma As Double)
 'function for calculation of pressure gradient in pipe according to Begs and Brill method
 'Return (psi/ft (atma/m))
 'Arguments
@@ -2143,9 +2162,9 @@ Dim n_re As Double 'Reinolds number
 Dim n_fr As Double 'Froude number
 Dim n_lv As Double 'Liquid velocity number
 Dim flow_pattern As Integer
-Dim l_2, l_3, aa As Double
+Dim l_2, l_3, l_1, l_4, aa As Double
 Dim f_n As Double ' normalized friction factor
-Dim F As Double ' friction factor
+Dim f As Double ' friction factor
 Dim Y, s As Double
 Const c_p = 0.000009871668   ' переводной коэффициент
 Ap_m2 = const_Pi * arr_d_m ^ 2 / 4
@@ -2159,20 +2178,26 @@ Mu_n_cP = Mul_rc_cP * lambda_l + Mug_rc_cP * (1 - lambda_l) ' No slip mixture vi
 n_re = 1000 * Rho_n_kgm3 * Vsm_msec * arr_d_m / Mu_n_cP
 n_fr = Vsm_msec ^ 2 / (const_g * arr_d_m)
 n_lv = Vsl_msec * (rho_lrc_kgm3 / (const_g * sigma_l_Nm)) ^ 0.25
+l_1 = 316 * lambda_l ^ 0.302
+l_2 = 0.000925 * lambda_l ^ -2.468
+l_3 = 0.1 * lambda_l ^ -1.452
+l_4 = 0.5 * lambda_l ^ -6.738
 '-----------------------------------------------------------------------
 'determine flow pattern
-If (n_fr >= 316 * lambda_l ^ 0.302 Or n_fr >= 0.5 * lambda_l ^ -6.738) Then
+If (n_fr >= l_1 And lambda_l < 0.4 Or n_fr > l_4 And lambda_l >= 0.4) Then
   flow_pattern = 2
 Else
-  If (n_fr <= 0.000925 * lambda_l ^ -2.468) Then
+  If (n_fr < l_2 And lambda_l >= 0.01 Or n_fr < l_1 And lambda_l < 0.01) Then
     flow_pattern = 0
   Else
-    If (n_fr <= 0.1 * lambda_l ^ -1.452) Then
+    If (n_fr < l_3 And n_fr >= l_2 And lambda_l >= 0.01) Then
       flow_pattern = 3
     Else
+    If (n_fr > l_3 And n_fr <= l_1 And lambda_l >= 0.01 And lambda_l < 0.4 Or lambda_l >= 0.4 And n_fr > l_3 And n_fr <= l_4) Then
       flow_pattern = 1
     End If
   End If
+End If
 End If
       
 '-----------------------------------------------------------------------
@@ -2180,8 +2205,6 @@ End If
 If (flow_pattern = 0 Or flow_pattern = 1 Or flow_pattern = 2) Then
   Hl_out_fr = h_l_arr_theta_deg(flow_pattern, lambda_l, n_fr, n_lv, arr_theta_deg, Payne_et_all_holdup)
 Else
-  l_2 = 0.000925 * lambda_l ^ -2.468
-  l_3 = 0.1 * lambda_l ^ -1.452
   aa = (l_3 - n_fr) / (l_3 - l_2)
   Hl_out_fr = aa * h_l_arr_theta_deg(0, lambda_l, n_fr, n_lv, arr_theta_deg, Payne_et_all_holdup) + _
             (1 - aa) * h_l_arr_theta_deg(1, lambda_l, n_fr, n_lv, arr_theta_deg, Payne_et_all_holdup)
@@ -2196,25 +2219,26 @@ Else
   s = Log(Y) / (-0.0523 + 3.182 * Log(Y) - 0.8725 * (Log(Y)) ^ 2 + 0.01853 * (Log(Y)) ^ 4)
 End If
 'calculate friction factor
-F = f_n * Exp(s)
+f = f_n * Exp(s)
 'calculate mixture density
 rho_s = rho_lrc_kgm3 * Hl_out_fr + rho_grc_kgm3 * (1 - Hl_out_fr)
 'calculate pressure gradient due to gravity
 dPdLg_out_atmm = c_p * rho_s * const_g * sind(arr_theta_deg)
 'calculate pressure gradient due to friction
-dPdLf_out_atmm = c_p * F * Rho_n_kgm3 * Vsm_msec ^ 2 / (2 * arr_d_m)
+dPdLf_out_atmm = c_p * f * Rho_n_kgm3 * Vsm_msec ^ 2 / (2 * arr_d_m)
 'calculate pressure gradient
-dPdLa_out_atmm = 0   ' not acounted in BeggsBrill
+dPdLa_out_atmm = 1 - Vsm_msec * Rho_n_kgm3 * Vsg_msec / p_atma / 100000 ' not acounted in BeggsBrill
 ' Hl_out_fr рассчитано по ходу дела
 fpat_out_num = flow_pattern
-unf_BegsBrillGradient = Array(dPdLg_out_atmm * betta_grav + dPdLf_out_atmm * betta_fric, _
+unf_BegsBrillGradient = Array((dPdLg_out_atmm * betta_grav + dPdLf_out_atmm * betta_fric) / dPdLa_out_atmm, _
                             dPdLg_out_atmm * betta_grav, _
                             dPdLf_out_atmm * betta_fric, _
-                            dPdLa_out_atmm, _
+                            c_p * Vsm_msec * Rho_n_kgm3 * Vsg_msec / p_atma / 100000, _
                             Vsl_msec, _
                             Vsg_msec, _
                             Hl_out_fr, _
                             fpat_out_num)
+' dPdLa_out_atmm, _
 End Function
 Private Function h_l_arr_theta_deg(flow_pattern As Integer, ByVal lambda_l As Double, ByVal n_fr As Double, _
                     ByVal n_lv As Double, ByVal arr_theta_deg As Double, ByVal Payne_et_all As Integer) As Double
@@ -2235,8 +2259,8 @@ c(0) = 0.0868: c(1) = 0.0173: c(2) = 0.0609
 'constants to determine liquid holdup correction
 Dim E(3) As Double
 E(0) = 0.011: E(1) = 2.96: E(2) = 1
-Dim F(3) As Double
-F(0) = -3.768: F(1) = 0.305: F(2) = 0
+Dim f(3) As Double
+f(0) = -3.768: f(1) = 0.305: f(2) = 0
 Dim G(3) As Double
 G(0) = 3.539: G(1) = -0.4473: G(2) = 0
 Dim h(3) As Double
@@ -2246,12 +2270,12 @@ Dim h_l_0 As Double
 h_l_0 = a(flow_pattern) * lambda_l ^ B(flow_pattern) / n_fr ^ c(flow_pattern)
 'calculate correction for inclination angle
 Dim cc As Double
-cc = max(0, (1 - lambda_l) * Log(E(flow_pattern) * lambda_l ^ F(flow_pattern) * n_lv ^ G(flow_pattern) * n_fr ^ h(flow_pattern)))
+cc = max(0, (1 - lambda_l) * Log(E(flow_pattern) * lambda_l ^ f(flow_pattern) * n_lv ^ G(flow_pattern) * n_fr ^ h(flow_pattern)))
 Dim psi As Double
 'convert angle to radians
 Dim arr_theta_deg_d As Double
 arr_theta_deg_d = const_Pi / 180 * arr_theta_deg
-psi = 1 + cc * (Sin(1.8 * arr_theta_deg_d) + 0.333 * (Sin(1.8 * arr_theta_deg_d)) ^ 3)
+psi = 1 + cc * (Sin(1.8 * arr_theta_deg_d) - 0.333 * (Sin(1.8 * arr_theta_deg_d)) ^ 3)
 'calculate liquid holdup with payne et al. correction factor
 If Payne_et_all > 0 Then
   
@@ -2278,7 +2302,7 @@ Public Function unf_UnifiedTUFFPGradient(ByVal arr_d_m As Double, _
                                   ByVal sigma_l_Nm As Double, _
                                   ByVal rho_lrc_kgm3 As Double, _
                                   ByVal rho_grc_kgm3 As Double, _
-                                  ByVal P_atma As Double, _
+                                  ByVal p_atma As Double, _
                                   Optional ByVal ZNLF As Boolean = False, _
                                   Optional betta_grav As Double = 1, _
                                   Optional betta_fric As Double = 1)
@@ -2307,7 +2331,7 @@ Public Function unf_UnifiedTUFFPGradient(ByVal arr_d_m As Double, _
  Vsg_msec = const_conver_sec_day * Qg_rc_m3day / Ap_m2
  'On Error Resume Next
  On Error GoTo lblCloseFile
- Call zhangmodel(arr_d_m, roughness_d, arr_theta_deg, Vsl_msec, Vsg_msec, rho_lrc_kgm3, rho_grc_kgm3, Mul_rc_cP, Mug_rc_cP, sigma_l_Nm, P_atma, _
+ Call zhangmodel(arr_d_m, roughness_d, arr_theta_deg, Vsl_msec, Vsg_msec, rho_lrc_kgm3, rho_grc_kgm3, Mul_rc_cP, Mug_rc_cP, sigma_l_Nm, p_atma, _
                  Hl_out_fr, pgt_out, pgf_out, fpat_out_num, _
                  vf, hlf, sl, Ff, hls, cu, fqn, rsu, icon, cs, cf, vc, pge_out, pga_out, , ierr)
 lblCloseFile:
@@ -4082,7 +4106,7 @@ End Function
 '
 '
         
-Public Function unf_GrayModifiedGradient(ByVal d_m As Double, _
+Public Function unf_GrayModifiedGradient(p_atma As Double, T_C As Double, ByVal d_m As Double, _
                                   ByVal theta_deg As Double, ByVal eps_m As Double, _
                                   ByVal Ql_rc_m3day As Double, ByVal Qg_rc_m3day As Double, _
                                   ByVal Mul_rc_cP As Double, ByVal Mug_rc_cP As Double, _
@@ -4143,7 +4167,7 @@ Dim n_fr As Double 'Froude number
 Dim n_lv As Double 'Liquid velocity number
 Dim flow_pattern As Integer
 Dim f_n As Double ' normalized friction factor
-Dim F As Double ' friction factor
+Dim f As Double ' friction factor
 Dim Y, s As Double
 Const c_p = 0.000009871668   ' переводной коэффициент
     Dim r As Double 'dimensionless'superficial liquid to gas ratio parameter
@@ -4155,7 +4179,7 @@ Const c_p = 0.000009871668   ' переводной коэффициент
     Dim B As Double
     Dim h_l 'liquid holdup by original Gray
     Dim dpdl_g As Double, dpdl_f As Double, dpdl_g1 As Double, dpdl_f1 As Double
-    Dim dPdL_out_atmm
+    Dim dPdL_out_atmm As Double
     
 Ap_m2 = const_Pi * d_m ^ 2 / 4
 lambda_l = Ql_rc_m3day / (Ql_rc_m3day + Qg_rc_m3day)
@@ -4180,7 +4204,7 @@ n_lv = Vsl_msec * (rho_lrc_kgm3 / (const_g * sigma_l_Nm)) ^ 0.25
     Nd = const_g * (rho_lrc_kgm3 - rho_grc_kgm3) * d_m ^ 2 / sigma_l_Nm
     
     B = 0.0814 * (1 - 0.0554 * Log(1 + 730 * r / (r + 1)))
-    h_l = (r + Exp(-2.314 * (Nv * (1 + 250 / Nd)) ^ B)) / (r + 1)
+    h_l = 1 - (1 - Exp(-2.314 * (Nv * (1 + 205 / Nd)) ^ B)) / (r + 1)
     'Calculate normalized friction factor
     f_n = unf_calc_friction_factor(n_re, E, Payne_et_all_friction)
     'calculate friction factor correction for multiphase flow
@@ -4190,18 +4214,26 @@ n_lv = Vsl_msec * (rho_lrc_kgm3 / (const_g * sigma_l_Nm)) ^ 0.25
     Else
         s = Log(Y) / (-0.0523 + 3.182 * Log(Y) - 0.8725 * (Log(Y)) ^ 2 + 0.01853 * (Log(Y)) ^ 4)
     End If
-    F = f_n
+    f = f_n
     rho_s = rho_lrc_kgm3 * h_l + rho_grc_kgm3 * (1 - h_l) 'calculate mixture density
     dpdl_g = c_p * rho_s * const_g * sind(theta_deg)  'calculate pressure gradient due to gravity
-    dpdl_f = c_p * F * Rho_n_kgm3 * Vsm_msec ^ 2 / (2 * d_m)  'calculate pressure gradient due to friction
+    dpdl_f = c_p * f * Rho_n_kgm3 * Vsm_msec ^ 2 / (2 * d_m)  'calculate pressure gradient due to friction
     dpdl_g1 = c_p * Rho_n_kgm3 * const_g * sind(theta_deg)
-    dpdl_f1 = c_p * F * Rho_n_kgm3 * Vsm_msec ^ 2 / (2 * d_m) 'calculate pressure gradient due to friction
+    dpdl_f1 = c_p * f * Rho_n_kgm3 * Vsm_msec ^ 2 / (2 * d_m) 'calculate pressure gradient due to friction
    Select Case correl3
    Case 0
     dPdL_out_atmm = dpdl_g + dpdl_f
     dPdLg_out_atmm = dpdl_g
     dPdLf_out_atmm = dpdl_f
-    dPdLa_out_atmm = 0
+       ' p_atma = p_atma + dPdL_out_atmm
+       ' T_C = T_C + 5
+    'With Fluid
+    'Dim fl1 As New CPVT
+    'Call fl1.Copy(Fluid)
+    'Dim PVT As New CPVT
+    'Call fl1.Calc_PVT(p_atma, T_C)
+    dPdLa_out_atmm = 0 'c_p * ((fl1.Qliq_rc_m3day + fl1.Qgas_rc_m3day) / (fl1.rho_liq_kgm3 * fl1.Qliq_rc_m3day + fl1.rho_gas_kgm3 * fl1.Qgas_rc_m3day) - 1 / Rho_n_kgm3) * (Rho_n_kgm3 * Vsm_msec) ^ 2
+   ' End With
    Case 1
     dPdL_out_atmm = dpdl_g1 + dpdl_f1
     dPdLg_out_atmm = dpdl_g1
@@ -4210,7 +4242,7 @@ n_lv = Vsl_msec * (rho_lrc_kgm3 / (const_g * sigma_l_Nm)) ^ 0.25
    End Select
     Hl_out_fr = h_l
     fpat_out_num = 0
-    unf_GrayModifiedGradient = Array(dPdLg_out_atmm * betta_grav + dPdLf_out_atmm * betta_fric, _
+    unf_GrayModifiedGradient = Array(dPdLg_out_atmm * betta_grav + dPdLf_out_atmm * betta_fric - dPdLa_out_atmm, _
                             dPdLg_out_atmm * betta_grav, _
                             dPdLf_out_atmm * betta_fric, _
                                 dPdLa_out_atmm, _
@@ -4423,9 +4455,9 @@ If d >= 0.015 And d <= 0.0762 Then
         
         If mu_l <= 40 Then c2 = (1 + 0.11 * Exp(0.05 * mu_l) / (1 + 1.1 * 0.05 * mu_l) - (0.1 - 2.52 * 0.001 * (mu_l - 1)) * (d / 0.015 - 1))
         If mu_l > 40 Then c2 = (1 + 0.11 * Exp(0.05 * mu_l) / (1 + 1.1 * 0.05 * mu_l))
-        Dim F As Double
+        Dim f As Double
         
-        F = 0.067 * (158 / n_re + 2 * E / d) ^ 0.2
+        f = 0.067 * (158 / n_re + 2 * E / d) ^ 0.2
         
         Dim rho_s As Double
         Dim delta_rho As Double
@@ -4440,7 +4472,7 @@ End If
 'calculate pressure gradient due to gravity
 dpdl_g = c_p(Units) * rho_s * G(Units) * sind(theta)
 'calculate pressure gradient due to friction
-dpdl_f = c_p(Units) * F * (rho_l * (V_sl ^ 2) / (1 - Hl) + rho_g * (V_sg ^ 2) / Hl) / (2 * d)
+dpdl_f = c_p(Units) * f * (rho_l * (V_sl ^ 2) / (1 - Hl) + rho_g * (V_sg ^ 2) / Hl) / (2 * d)
 'calculate pressure gradient
 dPdL_out_atmm = dpdl_g + dpdl_f
     dPdLg_out_atmm = dpdl_g
@@ -4479,7 +4511,7 @@ Public Function unf_HagedornandBrawnmodified(ByVal d_m As Double, _
                                   ByVal sigma_l_Nm As Double, _
                                   ByVal rho_lrc_kgm3 As Double, _
                                   ByVal rho_grc_kgm3 As Double, _
-                                  ByVal P_atma As Double, _
+                                  ByVal p_atma As Double, _
                                   Optional Payne_et_all_holdup As Integer = 0, _
                                   Optional Payne_et_all_friction As Integer = 1, _
                                   Optional correl3 As Double = 0, _
@@ -4532,7 +4564,7 @@ Dim n_re As Double 'Reinolds number
 'Dim n_lv1 As Double 'Liquid velocity number
 Dim flow_pattern As Integer
 Dim f_n As Double ' normalized friction factor
-Dim F As Double ' friction factor
+Dim f As Double ' friction factor
 Dim Y, s As Double
     Dim r As Double 'dimensionless'superficial liquid to gas ratio parameter
     Dim E As Double    'Pipe relative roughness
@@ -4609,7 +4641,7 @@ If (B - a) >= 0 Then  ' считаем по Хайгедорну Брауну
         n_d = d_m * (rho_lrc_kgm3 * const_g / sigma_l_Nm) ^ 0.5 'Determine Diametr number
         n_l = Mul_rc_cP * const_convert_cP_Pasec * (const_g / (rho_lrc_kgm3 * sigma_l_Nm ^ 3)) ^ 0.25 'Determine Liquid viscosity number
         N_lc = -0.0259 * n_l ^ 4 + 0.1011 * n_l ^ 3 - 0.1272 * n_l ^ 2 + 0.0619 * n_l + 0.0018  ' корреляция подобрана по графуку рнт
-        HB_complex = (n_lv / n_gv ^ 0.575) * (N_lc / n_d) * (P_atma) ^ 0.1
+        HB_complex = (n_lv / n_gv ^ 0.575) * (N_lc / n_d) * (p_atma) ^ 0.1
         Hl_phi = B0 + b1 * (log10(HB_complex) + 6) + B2 * (log10(HB_complex) + 6) ^ 2 + B3 * (log10(HB_complex) + 6) ^ 3 + B4 * (log10(HB_complex) + 6) ^ 4
         B = (n_gv * n_l ^ 0.38) / n_d ^ 2.14
         phi = c0 + c1 * B + c2 * B ^ 2 + c3 * B ^ 3 + c4 * B ^ 4
@@ -4627,12 +4659,12 @@ End If
 rho_tp = rho_lrc_kgm3 * h_l + rho_grc_kgm3 * (1 - h_l)
 mu_tp = Mul_rc_cP ^ h_l + Mug_rc_cP ^ (1 - h_l)
 f_n = unf_calc_friction_factor(n_re, E, Payne_et_all_friction)
-F = f_n
+f = f_n
 rho_s = rho_lrc_kgm3 * h_l + rho_grc_kgm3 * (1 - h_l) 'calculate mixture density
 dpdl_g = c_p * rho_tp * const_g * sind(theta_deg) 'calculate pressure gradient due to gravity
-dpdl_f = c_p * F * Rho_n_kgm3 ^ 2 * Vsm_msec ^ 2 / (2 * d_m * rho_tp) 'calculate pressure gradient due to friction
+dpdl_f = c_p * f * Rho_n_kgm3 ^ 2 * Vsm_msec ^ 2 / (2 * d_m * rho_tp) 'calculate pressure gradient due to friction
 dpdl_g1 = c_p * Rho_n_kgm3 * const_g * sind(theta_deg)
-dpdl_f1 = c_p * F * Rho_n_kgm3 ^ 2 * Vsm_msec ^ 2 / (2 * d_m * rho_tp) 'calculate pressure gradient due to friction
+dpdl_f1 = c_p * f * Rho_n_kgm3 ^ 2 * Vsm_msec ^ 2 / (2 * d_m * rho_tp) 'calculate pressure gradient due to friction
 Select Case correl3
 Case 0
 'calculate pressure gradient
@@ -4809,12 +4841,12 @@ Dim f_l As Double
 f_g = 0.0094 / (d ^ 1 / 3)
 f_l = 0.3164 / (n_re ^ 1 / 4)
 'calculate pressure gradient due to friction
-Dim k As Double
-If d > 0.035 And d < 0.04 Then k = 1.06
-If d > 0.048 And d < 0.053 Then k = 0.87
-If d > 0.059 And d < 0.068 Then k = 0.73
-If d > 0.073 And d < 0.0792 Then k = 0.65
-dpdl_f = c_p(Units) * 9.07 * (10 ^ (-9)) * (q_g ^ 2) / (d ^ 5.33) + 7.95 * (10 ^ (-6)) * (q_l ^ 1.75) * (mu_l ^ 1 / 4) / (d ^ 4.75) + 1.08 * (10 ^ (-7)) * (q_l ^ (1 / 3)) * (mu_l ^ 0.025) * ((q_g * q_l * 10 ^ 6) ^ k) / d ^ 3
+Dim K As Double
+If d > 0.035 And d < 0.04 Then K = 1.06
+If d > 0.048 And d < 0.053 Then K = 0.87
+If d > 0.059 And d < 0.068 Then K = 0.73
+If d > 0.073 And d < 0.0792 Then K = 0.65
+dpdl_f = c_p(Units) * 9.07 * (10 ^ (-9)) * (q_g ^ 2) / (d ^ 5.33) + 7.95 * (10 ^ (-6)) * (q_l ^ 1.75) * (mu_l ^ 1 / 4) / (d ^ 4.75) + 1.08 * (10 ^ (-7)) * (q_l ^ (1 / 3)) * (mu_l ^ 0.025) * ((q_g * q_l * 10 ^ 6) ^ K) / d ^ 3
 'calculate pressure gradient due to gravity
 dpdl_g = c_p(Units) * rho_s * G(Units) * Sin(const_Pi / 180 * theta)
 'calculate pressure gradient

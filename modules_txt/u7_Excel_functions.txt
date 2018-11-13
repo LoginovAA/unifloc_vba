@@ -14,12 +14,12 @@ Sub Описание_PVT()
 ' функция определения описания для интерфейса Excel
 ' достаточно вызвать один раз для того, чтобы поменять описание
 ' лучше вызывать функцию u7_descriptions.Задать_описания если надо поменять описания
-    Dim P_atma, T_C, gamma_gas, gamma_oil, _
+    Dim p_atma, T_C, gamma_gas, gamma_oil, _
                gamma_wat, rsb_m3m3, Rp_m3m3, _
               Pb_atma, Tres_C, Bob_m3m3, Muob_cP, PVTcorr, Ksep_fr, PKsep_atma, _
               TKsep_C, Qliq_m3day, wc_perc, PVTstr
     Dim a, MF1, MF2
-    P_atma = "Давление расчета, атма"
+    p_atma = "Давление расчета, атма"
     T_C = "Температура расчета, С"
     gamma_gas = "Относительная плотность газа, по воздуху (плотность воздуха 1.2217 кг/м3)"
     gamma_oil = "Относительная плотность нефти, по воде"
@@ -38,12 +38,12 @@ Sub Описание_PVT()
     Qliq_m3day = "Дебит жидкости на поверхности, м3/сут"
     wc_perc = "Обводненность продукции на поверхности, %"
     
-    a = Array(P_atma, T_C, gamma_gas, gamma_oil, _
+    a = Array(p_atma, T_C, gamma_gas, gamma_oil, _
               gamma_wat, rsb_m3m3, Rp_m3m3, _
               Pb_atma, Tres_C, Bob_m3m3, Muob_cP, PVTcorr, Ksep_fr, PKsep_atma, _
               TKsep_C, PVTstr)
               
-    MF1 = Array(Qliq_m3day, wc_perc, P_atma, T_C, gamma_gas, gamma_oil, _
+    MF1 = Array(Qliq_m3day, wc_perc, p_atma, T_C, gamma_gas, gamma_oil, _
               gamma_wat, rsb_m3m3, Rp_m3m3, _
               Pb_atma, Tres_C, Bob_m3m3, Muob_cP, PVTcorr, Ksep_fr, PKsep_atma, _
               TKsep_C, PVTstr)
@@ -160,7 +160,7 @@ Sub Описание_PVT()
      
 End Sub
 ' функция расчета объемного коэффициента газа
-Public Function PVT_Bg_m3m3(P_atma, T_C, _
+Public Function PVT_Bg_m3m3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -226,12 +226,12 @@ Public Function PVT_Bg_m3m3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Bg_m3m3 = PVT.Bg_m3m3
 End Function
 ' расчет объемного коэффициента нефти
-Public Function PVT_Bo_m3m3(P_atma, T_C, _
+Public Function PVT_Bo_m3m3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -298,12 +298,12 @@ Public Function PVT_Bo_m3m3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Bo_m3m3 = PVT.Bo_m3m3
 End Function
 ' расчет объемного коэффициента воды
-Public Function PVT_Bw_m3m3(P_atma, T_C, _
+Public Function PVT_Bw_m3m3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -369,12 +369,12 @@ Public Function PVT_Bw_m3m3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Bw_m3m3 = PVT.Bw_m3m3
 End Function
 ' расчет объемного коэффициента воды
-Public Function PVT_Sal_ppm(P_atma, T_C, _
+Public Function PVT_Sal_ppm(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -440,12 +440,12 @@ Public Function PVT_Sal_ppm(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Sal_ppm = PVT.Sal_ppm
 End Function
 ' расчет вязкости нефти
-Public Function PVT_Muo_cP(P_atma, T_C, _
+Public Function PVT_Muo_cP(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -510,12 +510,12 @@ Public Function PVT_Muo_cP(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Muo_cP = PVT.Muo_cP
 End Function
 ' расчет вязкости газа
-Public Function PVT_Mug_cP(P_atma, T_C, _
+Public Function PVT_Mug_cP(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -580,12 +580,12 @@ Public Function PVT_Mug_cP(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Mug_cP = PVT.Mug_cP
 End Function
 ' расчет вязкости воды
-Public Function PVT_Muw_cP(P_atma, T_C, _
+Public Function PVT_Muw_cP(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -650,12 +650,12 @@ Public Function PVT_Muw_cP(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Muw_cP = PVT.Muw_cP
 End Function
 ' расчет газосодержания
-Public Function PVT_Rs_m3m3(P_atma, T_C, _
+Public Function PVT_Rs_m3m3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -720,12 +720,12 @@ Public Function PVT_Rs_m3m3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
-    PVT_Rs_m3m3 = PVT.Rs_m3m3
+    PVT_Rs_m3m3 = PVT.rs_m3m3
 End Function
 ' расчет коэффициента сверхсжимаемости газа
-Public Function PVT_Z(P_atma, T_C, _
+Public Function PVT_Z(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -791,12 +791,12 @@ Public Function PVT_Z(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Z = PVT.z
 End Function
 ' расчет плотности нефти
-Public Function PVT_Rhoo_kgm3(P_atma, T_C, _
+Public Function PVT_Rhoo_kgm3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -861,12 +861,12 @@ Public Function PVT_Rhoo_kgm3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Rhoo_kgm3 = PVT.rho_oil_kgm3
 End Function
 ' расчет плотности газа
-Public Function PVT_Rhog_kgm3(P_atma, T_C, _
+Public Function PVT_Rhog_kgm3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -931,12 +931,12 @@ Public Function PVT_Rhog_kgm3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Rhog_kgm3 = PVT.rho_gas_kgm3
 End Function
 ' расчет плотности воды
-Public Function PVT_Rhow_kgm3(P_atma, T_C, _
+Public Function PVT_Rhow_kgm3(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1001,7 +1001,7 @@ Public Function PVT_Rhow_kgm3(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_Rhow_kgm3 = PVT.rho_water_kgm3
 End Function
@@ -1074,7 +1074,7 @@ Public Function PVT_Pb_atma(T_C, _
     PVT_Pb_atma = PVT.Calc_Pb_atma(rsb_m3m3, T_C)
 End Function
 ' расчет коэффициента поверхностного натяжения нефть - газ
-Public Function PVT_SToilgas_Nm(P_atma, T_C, _
+Public Function PVT_SToilgas_Nm(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1140,12 +1140,12 @@ Public Function PVT_SToilgas_Nm(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_SToilgas_Nm = PVT.sigma_o_Nm
 End Function
 ' расчет коэффициента поверхностного натяжения вода - газ
-Public Function PVT_STwatgas_Nm(P_atma, T_C, _
+Public Function PVT_STwatgas_Nm(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1211,12 +1211,12 @@ Public Function PVT_STwatgas_Nm(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_STwatgas_Nm = PVT.sigma_w_Nm
 End Function
 ' расчет коэффициента поверхностного натяжения жидкость - газ
-Public Function PVT_STliqgas_Nm(P_atma, T_C, _
+Public Function PVT_STliqgas_Nm(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1282,12 +1282,12 @@ Public Function PVT_STliqgas_Nm(P_atma, T_C, _
             Call PVT.ModAfterSeparation(PKsep_atma, TKsep_C, Ksep_fr, GasGoesIntoSolution)
         End If
     End If
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     PVT_STliqgas_Nm = PVT.sigma_liq_Nm
 End Function
 ' расчет объемного расхода газожидкостной смеси для заданных термобарических условий
-Public Function MF_Qmix_m3day(Qliq_m3day, wc_perc, P_atma, T_C, _
+Public Function MF_Qmix_m3day(Qliq_m3day, wc_perc, p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1356,12 +1356,12 @@ Public Function MF_Qmix_m3day(Qliq_m3day, wc_perc, P_atma, T_C, _
      
     PVT.wc_perc = wc_perc
     PVT.Qliq_scm3day = Qliq_m3day
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     MF_Qmix_m3day = PVT.Qmix_m3day
 End Function
 ' расчет плотности газожидкостной смеси для заданных термобарических условий
-Public Function MF_Rhomix_kgm3(Qliq_m3day, wc_perc, P_atma, T_C, _
+Public Function MF_Rhomix_kgm3(Qliq_m3day, wc_perc, p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1430,12 +1430,12 @@ Public Function MF_Rhomix_kgm3(Qliq_m3day, wc_perc, P_atma, T_C, _
      
     PVT.wc_perc = wc_perc
     PVT.Qliq_scm3day = Qliq_m3day
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
         
     MF_Rhomix_kgm3 = PVT.rho_mix_kgm3
 End Function
 ' расчет вязкости газожидкостной смеси для заданных термобарических условий
-Public Function MF_Mumix_cP(Qliq_m3day, wc_perc, P_atma, T_C, _
+Public Function MF_Mumix_cP(Qliq_m3day, wc_perc, p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1504,12 +1504,12 @@ Public Function MF_Mumix_cP(Qliq_m3day, wc_perc, P_atma, T_C, _
      
     PVT.wc_perc = wc_perc
     PVT.Qliq_scm3day = Qliq_m3day
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     
     MF_Mumix_cP = PVT.MuMix_cP
 End Function
 ' расчет доли газа в потоке
-Public Function MF_GasFraction_d(P_atma, T_C, _
+Public Function MF_GasFraction_d(p_atma, T_C, _
                     Optional wc_perc = 0, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
@@ -1578,7 +1578,7 @@ Public Function MF_GasFraction_d(P_atma, T_C, _
     End If
     PVT.wc_perc = wc_perc
     
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     MF_GasFraction_d = PVT.GasFraction_d(0)
 End Function
 ' расчет давления при котором достигается заданная доля газа в потоке
@@ -1632,7 +1632,7 @@ Public Function MF_PGasFraction_atma(FreeGas_d, T_C, _
 '
 ' выходное значение - число - давление, атма.
     Dim PVT As CPVT
-    Dim t As Double
+    Dim T As Double
     If PVTstr <> "" Then
         Set PVT = PVT_Decode_string(PVTstr)
     Else
@@ -1644,11 +1644,11 @@ Public Function MF_PGasFraction_atma(FreeGas_d, T_C, _
     End If
     PVT.wc_perc = wc_perc
     
-    t = T_C
-    MF_PGasFraction_atma = PVT.PGasFraction_atma(FreeGas_d, t)
+    T = T_C
+    MF_PGasFraction_atma = PVT.PGasFraction_atma(FreeGas_d, T)
 End Function
 ' расчет газового фактора при котором достигается заданная доля газа в потоке
-Public Function MF_RpGasFraction_m3m3(FreeGas_d, P_atma, T_C, _
+Public Function MF_RpGasFraction_m3m3(FreeGas_d, p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -1698,7 +1698,7 @@ Public Function MF_RpGasFraction_m3m3(FreeGas_d, P_atma, T_C, _
 '
 ' выходное значение - число - давление, атма.
     Dim PVT As New CPVT
-    Dim t As Double, p As Double
+    Dim T As Double, p As Double
     PVT.Init gamma_gas, gamma_oil, gamma_wat, rsb_m3m3, Pb_atma, Bob_m3m3, PVTcorr, Tres_C, Rp_m3m3, Muob_cP
     PVT.wc_perc = wc_perc
           
@@ -1709,9 +1709,9 @@ Public Function MF_RpGasFraction_m3m3(FreeGas_d, P_atma, T_C, _
     End If
     
     'Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
-    t = T_C
-    p = P_atma
-    MF_RpGasFraction_m3m3 = PVT.RpGasFraction_m3m3(FreeGas_d, p, t)
+    T = T_C
+    p = p_atma
+    MF_RpGasFraction_m3m3 = PVT.RpGasFraction_m3m3(FreeGas_d, p, T)
 End Function
 ' расчет натуральной сепарации газа на приеме насоса
 Public Function MF_SeparNat_d(Pin_atma As Double, _
@@ -1782,7 +1782,7 @@ Public Function MF_SeparTotal_d(SepNat As Double, _
     MF_SeparTotal_d = SepNat + (1 - SepNat) * SepGasSep
 End Function
 Public Function MF_PrGrad(ByVal d_m As Double, _
-             ByVal P_atma As Double, _
+             ByVal p_atma As Double, _
              ByVal Ql_rc_m3day As Double, _
              ByVal Qg_rc_m3day As Double, _
             Optional ByVal Muo_cP As Double = const_mu_o, _
@@ -1816,7 +1816,7 @@ On Error GoTo er1:
                                 sigma_o_Nm, _
                                 rho_osc_kgm3, _
                                 rho_gsc_kgm3, _
-                                P_atma)
+                                p_atma)
     
     MF_PrGrad = PrGrad
     
@@ -1930,7 +1930,7 @@ On Error GoTo err1:
     PVT.wc_perc = WCT_perc
     Set Pipe.Fluid = PVT
     
-    PTcalc.P_atma = Pcalc_atma
+    PTcalc.p_atma = Pcalc_atma
     PTcalc.T_C = Tcalc_C
     If Tother_C < 0 Then Tother_C = Tcalc_C
 '    Tcalc_method = 0 ' todo временно отключены другие методы кроме линейного
@@ -1944,6 +1944,7 @@ On Error GoTo err1:
     '       поэтому начало трубы это забой (по потоку), конец трубы это устье
     
 '    If Calc_from_H0 Then
+    Call Pipe.InitPipe(d_mm / 1000, Hmes0_m, Hmes1_m, theta_deg, roughness_m)
     If Hmes0_m < Hmes1_m Then
         Pipe.Param = ParamCalcFromTop(HydrCorr, TempMeth:=StartEndTemp)
         Pipe.InitTlinear Tcalc_C, Tother_C
@@ -1958,7 +1959,6 @@ On Error GoTo err1:
 '        Pipe.Tstart_C = Tcalc_C
 '        Pipe.Tend_C = Tother_C
     End If
-    Call Pipe.InitPipe(d_mm / 1000, Hmes0_m, Hmes1_m, theta_deg, roughness_m)
     Pipe.betta_grav = betta_grav
     Pipe.betta_fric = betta_fric
     MF_dPpipe_atma = ArrayOut(Pipe.Calc_dPipe(PTcalc, noCurves))
@@ -2117,7 +2117,7 @@ End Function
 '    addLogMsg ("ошибка при расчете dPipe")
 'End Function
 Private Function ArrayOut(PT As PTtype)
-    ArrayOut = Array(PT.P_atma, PT.T_C)
+    ArrayOut = Array(PT.p_atma, PT.T_C)
 End Function
 ' ==============  функции для расчета штуцера ==========================
 ' =====================================================================
@@ -2203,7 +2203,7 @@ Public Function MF_dPChoke_atm(dPipe_mm, dchoke_mm, _
     Else
         PT = Choke.Calc_Choke_Pbuf(SetPT(P1_atma, Tchoke_C))
     End If
-    MF_dPChoke_atm = Array(PT.P_atma, PT.T_C)   ' на выходе выдаем массив
+    MF_dPChoke_atm = Array(PT.p_atma, PT.T_C)   ' на выходе выдаем массив
 End Function
 '' Расчет перепада давления в штуцере (против потока)
 'Public Function MF_dPChokeUp_atma(dPipe_mm, dchoke_mm, Pdown_atma, Qliq_m3day, WCT_perc, _
@@ -2569,8 +2569,8 @@ Public Function GL_dchoke_mm(Qg_m3d As Double, Pu_atma As Double, Pd_atma As Dou
         GL_dchoke_mm = -1
         Exit Function
     End If
-    Dim k As Double
-    k = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
+    Dim K As Double
+    K = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
     
     Dim Pu_psi As Double
     Dim Pd_psi As Double
@@ -2590,15 +2590,15 @@ Public Function GL_dchoke_mm(Qg_m3d As Double, Pu_atma As Double, Pd_atma As Dou
     Qg_Mcfd = Qg_m3d / 28.31993658
     
     Dim Pd_Pu_crit As Double
-    Pd_Pu_crit = (2 / (k + 1)) ^ (k / (k - 1))
+    Pd_Pu_crit = (2 / (K + 1)) ^ (K / (K - 1))
     
     Dim Pd_Pu As Double
     Pd_Pu = Pd_atma / Pu_atma
     
     Dim c0 As Double, c1 As Double, c2 As Double
-    c0 = ((Pd_Pu ^ (2 / k) - Pd_Pu ^ (1 + 1 / k))) ^ 0.5
-    c1 = (Pd_Pu_crit ^ (2 / k) - Pd_Pu_crit ^ (1 + 1 / k)) ^ 0.5
-    c2 = (2 * G * k / (k - 1)) ^ 0.5
+    c0 = ((Pd_Pu ^ (2 / K) - Pd_Pu ^ (1 + 1 / K))) ^ 0.5
+    c1 = (Pd_Pu_crit ^ (2 / K) - Pd_Pu_crit ^ (1 + 1 / K)) ^ 0.5
+    c2 = (2 * G * K / (K - 1)) ^ 0.5
     
     Dim a As Double
     
@@ -2631,13 +2631,13 @@ Function GL_dPgasPipe_atmg(ByVal H_m As Double, ByVal P_atmg As Double, ByVal T_
 'length - pipe length, m
 'T - temperature, C
 'P - pressure, atma
-Dim de, di, qg_sc, eps, length, t, p
+Dim de, di, qg_sc, eps, length, T, p
 de = dcas_mm / 1000
 di = dtub_mm / 1000
 qg_sc = Qg_scm3day
 eps = roughness
 length = H_m
-t = T_C
+T = T_C
 p = P_atmg
     
     'convert m3/d to scf/d
@@ -2649,8 +2649,8 @@ p = P_atmg
     
     
     Dim T_K As Double, T_F As Double
-    T_K = t + 273 'convert Celcsius to Kelvin
-    T_F = (9 / 5) * t + 32 'convert Celcsius to Fahrengheit
+    T_K = T + 273 'convert Celcsius to Kelvin
+    T_F = (9 / 5) * T + 32 'convert Celcsius to Fahrengheit
      
     Dim T_pc As Double
     Dim p_pc As Double
@@ -2698,8 +2698,8 @@ End Function
 ' also found in Mischenko book
 Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As Double, gamma_g As Double, Tu_C As Double)
     
-    Dim k As Double
-    k = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
+    Dim K As Double
+    K = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
     
     Dim d_in As Double
     d_in = d_mm * 0.03937
@@ -2713,7 +2713,7 @@ Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As
     Tu_F = Tu_C / 100 * 180 + 32
     
     Dim Pd_Pu_crit As Double
-    Pd_Pu_crit = (2 / (k + 1)) ^ (k / (k - 1))
+    Pd_Pu_crit = (2 / (K + 1)) ^ (K / (K - 1))
     
     
     Dim CD As Double  ' discharge coefficient
@@ -2723,8 +2723,8 @@ Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As
     G = 32.17 'ft/sec^2
     
     Dim c0 As Double, c1 As Double, c2 As Double
-    c1 = (Pd_Pu_crit ^ (2 / k) - Pd_Pu_crit ^ (1 + 1 / k)) ^ 0.5
-    c2 = (2 * G * k / (k - 1)) ^ 0.5
+    c1 = (Pd_Pu_crit ^ (2 / K) - Pd_Pu_crit ^ (1 + 1 / K)) ^ 0.5
+    c2 = (2 * G * K / (K - 1)) ^ 0.5
     
     Dim a As Double
     a = Application.PI * d_in ^ 2 / 4 'area of choke, sq in.
@@ -2748,7 +2748,7 @@ Public Function GL_Qgasvalve_m3day(d_mm As Double, Pu_atma As Double, Pd_atma As
     If Pd_Pu <= Pd_Pu_crit Then
         GL_Qgasvalve_m3day = Qg_crit * 28.31993658
     Else
-        c0 = ((Pd_Pu ^ (2 / k) - Pd_Pu ^ (1 + 1 / k))) ^ 0.5
+        c0 = ((Pd_Pu ^ (2 / K) - Pd_Pu ^ (1 + 1 / K))) ^ 0.5
         GL_Qgasvalve_m3day = Qg_crit * 28.31993658 * c0 / c1
     End If
 End Function
@@ -2757,10 +2757,10 @@ Public Function GL_Pd_gas_valve_atma(d_mm As Double, Pu_atma As Double, Qg_m3day
 Dim Qmax_m3day As Double, Qtest_m3day As Double
 Dim Pd As Double, Pd2 As Double, Pd1 As Double
 Pd = 1
-    Dim k As Double
-    k = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
+    Dim K As Double
+    K = 1.31   ' = Cp/Cv (approx 1.31 for natural gases(R Brown) or 1.25 (Mischenko) )
     Dim Pd_Pu_crit As Double
-    Pd_Pu_crit = (2 / (k + 1)) ^ (k / (k - 1))
+    Pd_Pu_crit = (2 / (K + 1)) ^ (K / (K - 1))
 '    Dim Pd_Pu As Double
 '    Pd_Pu = Pd_atma / Pu_atma
  Dim i As Integer
@@ -2786,7 +2786,7 @@ End If
 End Function
     
 ' функция расчета коэффициента Джоуля Томсона
-Public Function PVT_CJT_Katm(P_atma, T_C, _
+Public Function PVT_CJT_Katm(p_atma, T_C, _
                     Optional gamma_gas = const_gamma_gas_default, _
                     Optional gamma_oil = const_gamma_oil_default, _
                     Optional gamma_wat = const_gamma_wat_default, _
@@ -2831,7 +2831,7 @@ Public Function PVT_CJT_Katm(P_atma, T_C, _
     PVT.Init gamma_gas, gamma_oil, gamma_wat, rsb_m3m3, Pb_atma, Bob_m3m3, PVTcorr, Tres_C, Rp_m3m3
     PVT.Qliq_scm3day = Ql_m3day
     PVT.wc_perc = wc_perc
-    Call PVT.Calc_PVT(CDbl(P_atma), CDbl(T_C))
+    Call PVT.Calc_PVT(CDbl(p_atma), CDbl(T_C))
     PVT_CJT_Katm = PVT.CJT_Katm
 End Function
 Public Function PVT_Encode_string( _
@@ -2878,7 +2878,7 @@ Public Function PVT_Decode_string(PVTstr As String, Optional getStr As Boolean =
     Dim s As String
     Dim i As Integer
     Dim B
-    Dim P_atma As Double
+    Dim p_atma As Double
     Dim T_C, gamma_gas, gamma_oil, _
                gamma_wat, rsb_m3m3, Rp_m3m3, _
               Pb_atma, Tres_C, Bob_m3m3, Muob_cP, PVTcorr, Ksep_fr, PKsep_atma, _
@@ -2935,4 +2935,3 @@ er1:
     Err.Raise vbObjectError + 1, , "ошибка чтения закодированных данных PVT"
     
 End Function
-  

@@ -98,12 +98,12 @@ End Sub
  End Property
   
  Public Sub SetKseptotal(val As Double, PTsep As PTtype)
-    If val >= 0 And val <= 1 And PTsep.P_atma > 0 And PTsep.T_C > 0 Then
+    If val >= 0 And val <= 1 And PTsep.p_atma > 0 And PTsep.T_C > 0 Then
         p_KsepTotal_d = val
         p_PTsep = PTsep
     Else
         addLogMsg_debug "CWell.Kseptotal_d установить не удалось, значение " & str(val) & _
-                                                                     " P = " & str(PTsep.P_atma) & _
+                                                                     " P = " & str(PTsep.p_atma) & _
                                                                      " T = " & str(PTsep.T_C) & _
                                                                      " вне диапазона"
     End If
@@ -322,7 +322,7 @@ noESP:
  
  ' дебит газожидкостной смеси перед насосом в рабочих услови€х
  Public Property Get QmixBeforePump_m3day() As Double
-   Fluid.Calc_PVT p_PTintake.P_atma, p_PTintake.T_C
+   Fluid.Calc_PVT p_PTintake.p_atma, p_PTintake.T_C
    QmixBeforePump_m3day = Fluid.Qmix_m3day
  End Property
  
@@ -339,7 +339,7 @@ noESP:
  Public Property Get QmixPumpIntake_m3day() As Double
    Dim fl As CPVT
    Set fl = Fluid.GetCloneModAfterSeparation(Pintake_atma, Tintake_c, Kseptotal_d)
-   fl.Calc_PVT p_PTintake.P_atma, p_PTintake.T_C
+   fl.Calc_PVT p_PTintake.p_atma, p_PTintake.T_C
    QmixPumpIntake_m3day = fl.Qmix_m3day
  End Property
  
@@ -347,27 +347,27 @@ noESP:
  Public Property Get QmixPumpOutlet_m3day() As Double
    Dim fl As CPVT
    Set fl = Fluid.GetCloneModAfterSeparation(Pdischarge_atma, Tdischarge_C, Kseptotal_d)
-   fl.Calc_PVT p_PTintake.P_atma, p_PTintake.T_C
+   fl.Calc_PVT p_PTintake.p_atma, p_PTintake.T_C
    QmixPumpOutlet_m3day = fl.Qmix_m3day
  End Property
  
- Public Function GasFraction_d(P_atma As Double, T_C As Double, fl As CPVT, Ksep As Double)
+ Public Function GasFraction_d(p_atma As Double, T_C As Double, fl As CPVT, Ksep As Double)
     Dim Qo As Double, Qw As Double, Qg As Double
     GasFraction_d = fl.GasFraction_d(Ksep)
  End Function
  
  Public Property Get GasFraction_BeforePump_d() As Double
-    GasFraction_BeforePump_d = GasFraction_d(p_PTintake.P_atma, p_PTintake.T_C, Fluid, Ksep:=0)
+    GasFraction_BeforePump_d = GasFraction_d(p_PTintake.p_atma, p_PTintake.T_C, Fluid, Ksep:=0)
  End Property
  
 ' Public Property Get GasFraction_InGasSep_d() As Double
 '    GasFraction_InGasSep_d = GasFraction_d(p_PTintake.P_atma, p_PTintake.T_C, Fluid, Ksep:=KsepNat_d)
 ' End Property
  Public Property Get GasFraction_PumpIntake_d() As Double
-    GasFraction_PumpIntake_d = GasFraction_d(p_PTintake.P_atma, p_PTintake.T_C, Fluid, Ksep:=Kseptotal_d)
+    GasFraction_PumpIntake_d = GasFraction_d(p_PTintake.p_atma, p_PTintake.T_C, Fluid, Ksep:=Kseptotal_d)
  End Property
  Public Property Get GasFraction_PumpOutlet_d() As Double
-    GasFraction_PumpOutlet_d = GasFraction_d(p_PTdis.P_atma, p_PTdis.T_C, FluidTub, Ksep:=0)
+    GasFraction_PumpOutlet_d = GasFraction_d(p_PTdis.p_atma, p_PTdis.T_C, FluidTub, Ksep:=0)
  End Property
  
  Public Property Get Qo_scm3day() As Double
@@ -408,11 +408,11 @@ End Property
  End Property
  
  Public Property Get Pline_atma() As Double
-    Pline_atma = p_PTlin.P_atma
+    Pline_atma = p_PTlin.p_atma
  End Property
  
  Public Property Let Pline_atma(val As Double)
-    p_PTlin.P_atma = val
+    p_PTlin.p_atma = val
     p_Calculated = False
  End Property
  
@@ -422,11 +422,11 @@ End Property
  
  Public Property Get Pbuf_atma() As Double
  ' buffer pressure
-    Pbuf_atma = p_PTbuf.P_atma
+    Pbuf_atma = p_PTbuf.p_atma
  End Property
  
  Public Property Let Pbuf_atma(val As Double)
-    p_PTbuf.P_atma = val
+    p_PTbuf.p_atma = val
     p_Calculated = False
  End Property
  
@@ -436,7 +436,7 @@ End Property
  
  Public Property Get Pintake_atma() As Double
  ' давление на приеме
-    Pintake_atma = p_PTintake.P_atma
+    Pintake_atma = p_PTintake.p_atma
  End Property
  
  Public Property Get Tintake_c() As Double
@@ -445,7 +445,7 @@ End Property
  
  Public Property Get Pdischarge_atma() As Double
   ' давление на приеме
-    Pdischarge_atma = p_PTdis.P_atma
+    Pdischarge_atma = p_PTdis.p_atma
  End Property
  Public Property Get Tdischarge_C() As Double
     Tdischarge_C = p_PTdis.T_C
@@ -453,11 +453,11 @@ End Property
  
  Public Property Get Pwf_atma() As Double
  ' давление на забое
-    Pwf_atma = p_PTwf.P_atma
+    Pwf_atma = p_PTwf.p_atma
  End Property
  
  Public Property Let Pwf_atma(val As Double)
-    p_PTwf.P_atma = val
+    p_PTwf.p_atma = val
     p_Calculated = False
  End Property
  
@@ -759,7 +759,7 @@ err1:
     End If
     PlinTemp_atma = Calc_Plin_Pwf_atma(SetPT(Pwf_atma, Tbh_C), CalcCasing:=False)
     ' получаем на выходе коэффициент сепарации и параметры флюида на участке выше насоса
-    If isEqual(p_PTdis.P_atma, p_PTintake.P_atma) Then ' значит насос не развивает перепад давлени€ и подобрать коэффициент деградации не удастьс€
+    If isEqual(p_PTdis.p_atma, p_PTintake.p_atma) Then ' значит насос не развивает перепад давлени€ и подобрать коэффициент деградации не удастьс€
         Calc_Well = False     ' расчет провести не удалось
         ESPPressureDegradation = 0   ' возвращаем насос в исходное состо€ние
         Exit Function
@@ -776,17 +776,17 @@ err1:
     
     Dim flSep As CPVT   ' флюид дл€ которого будет проводитьс€ расчет выше сепарации
     If p_KsepTotal_d > 0 Then
-        Set flSep = p_Fluid.GetCloneModAfterSeparation(PTsep.P_atma, PTsep.T_C, p_KsepTotal_d)
+        Set flSep = p_Fluid.GetCloneModAfterSeparation(PTsep.p_atma, PTsep.T_C, p_KsepTotal_d)
     Else
         Set flSep = p_Fluid
     End If
-    p_PTlin.P_atma = Plin_atma
+    p_PTlin.p_atma = Plin_atma
     p_PTlin.T_C = Twh_C
     ' –асчет буферного давлени€ по штуцеру
     If isChoke() Then
         p_PTbuf = Choke.Calc_Choke_Pbuf(p_PTlin)
-        If p_PTbuf.P_atma < 0 Then
-            p_PTbuf.P_atma = 1 ' p_PTbuf.P_atma
+        If p_PTbuf.p_atma < 0 Then
+            p_PTbuf.p_atma = 1 ' p_PTbuf.P_atma
         End If
     Else
         p_PTbuf = p_PTlin
@@ -804,7 +804,7 @@ err1:
  
     p_Pipe_HspHvd.Param = ParamCalcFromTop(HFlowCorrelation, TempCorrelation)
     p_PTwf = p_Pipe_HspHvd.Calc_dPipe(p_PTintake, saveCurve)
-    Calcfast_Pwf_Plin_atma = p_PTwf.P_atma
+    Calcfast_Pwf_Plin_atma = p_PTwf.p_atma
     
     Call Curve(str_PtubHmes_curve).AddPointsCurve(p_Pipe_WHeadHsp_Tubing.PCurve, p_Pipe_HspHvd.PCurve) ', ESP.PCurve   пока не включаем в расчет распределение давлени€ в насосе, потом надо будет добавить
     Call Curve(str_TtubHmes_curve).AddPointsCurve(p_Pipe_WHeadHsp_Tubing.TCurve, p_Pipe_HspHvd.TCurve) ', ESP.TCurve
@@ -847,7 +847,7 @@ On Error GoTo err1:
         Plin1 = Calc_Plin_Pwf_atma(SetPT(Pwf1, Tbh_C), CalcCasing:=False, saveCurve:=noCurves)
         If (Abs(Plin1 - Plin_atma) < const_well_P_tolerance) Then
              found_solution = True
-             p_PTwf.P_atma = Pwf1
+             p_PTwf.p_atma = Pwf1
              p_PTwf.T_C = Tbh_C
         End If
         If Not found_solution Then
@@ -876,7 +876,7 @@ On Error GoTo err1:
     If Abs(Me.Pline_atma - Plin_atma) > const_well_P_tolerance Then
        addLogMsg "Calc_Pwf_Plin_atma: ошибка расчета забойного давлени€ больше " & const_well_P_tolerance & ". –авна = " & Abs(Me.Pline_atma - Plin_atma)
     End If
-    Calcslow_Pwf_Plin_atma = p_PTwf.P_atma
+    Calcslow_Pwf_Plin_atma = p_PTwf.p_atma
    ' переводим в состо€ние "целостность нарушена"
     p_Calculated = False
     Exit Function
@@ -994,8 +994,8 @@ On Error GoTo err1:
     If Dchoke_m > 0 And CalcChoke Then     ' пока отключено
         p_PTlin = Choke.Calc_Choke_Plin(p_PTbuf)
         
-        If p_PTlin.P_atma < 0 Then
-            p_PTlin.P_atma = 1 ' p_PTbuf.P_atma
+        If p_PTlin.p_atma < 0 Then
+            p_PTlin.p_atma = 1 ' p_PTbuf.P_atma
         End If
         ' тут надо бы проверить условие наличи€ критического потока в штуцере и определить диапазоны изменени€ параметров
 '        If p_Plin_atma = 0 Then
@@ -1007,7 +1007,7 @@ On Error GoTo err1:
     ' ≈сли при заданном затрубном давлении Pan существует отличный от нул€ динамический уровень Hdyn
     ' то в качестве результатов расчетов сохран€ютс€ эти значени€
     ' уже подсчитано
-    Calc_Plin_Pwf_atma = p_PTlin.P_atma
+    Calc_Plin_Pwf_atma = p_PTlin.p_atma
     
     If saveCurve > 0 Then
         Call Curve(str_PtubHmes_curve).AddPointsCurve(p_Pipe_WHeadHsp_Tubing.PCurve, p_Pipe_HspHvd.PCurve)
