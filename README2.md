@@ -60,8 +60,5 @@
  Киян Артем
  
  mega.kiyan@mail.ru
- ![Image alt](https://github.com/khabibullinra/unifloc_vba/edit/artem/README3.md)
- [a link](https://github.com/khabibullinra/unifloc_vba/edit/artem/README3.md)
- 
- [a relative link](https://github.com/khabibullinra/unifloc_vba/edit/artem/README3.md)
+
 
