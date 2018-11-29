@@ -23,4 +23,4 @@
  ### Описания к существующим файлам ###
  [Сравнение макросов из надстройки UniflocVBA7.3, старых макросов и симулятора PipeSim](https://github.com/khabibullinra/unifloc_vba/edit/artem/README2.md)
  
- [Сравнение составляющих градиента давления, скоростейи huldup фактора Pipesim и макросов](https://github.com/khabibullinra/unifloc_vba/edit/artem/README3.md)
+ [Сравнение составляющих градиента давления, скоростей и huldup фактора Pipesim и макросов](https://github.com/khabibullinra/unifloc_vba/edit/artem/README3.md)
