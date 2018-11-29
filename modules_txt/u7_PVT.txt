@@ -45,7 +45,7 @@ End Function
 Function unf_FVF_Saturated_Oil_Standing(rs_m3m3 As Variant, gamma_gas As Variant, Temperature_K As Variant, gamma_oil As Variant)
    Dim f As Double
    
-        f = 5.615 * rs_m3m3 * (gamma_gas / gamma_oil) ^ 0.5 + 2.25 * Temperature_K - 575
+        f = 5.614583 * rs_m3m3 * (gamma_gas / gamma_oil) ^ 0.5 + 2.25 * Temperature_K - 574.5875
         unf_FVF_Saturated_Oil_Standing = 0.972 + 0.000147 * f ^ 1.175
 End Function
 Function unf_FVF_Above_Bubblepoint_Pressure_Standing(Pressure_MPa As Variant, Bubblepoint_Pressure_MPa As Variant, Oil_Compressibility As Variant, FVF_Saturated_Oil As Variant)
@@ -339,7 +339,7 @@ Function unf_calc_Mug_cP(T_K As Double, P_MPa As Double, z As Double, GammaGas A
     unf_calc_Mug_cP = 0.0001 * a * Exp(B * gd ^ c)
     
 End Function
-Public Function unf_Calc_Zgas_d(T_K As Double, P_MPa As Double, GammaGas As Double, Optional ByVal z_cor As Z_CORRELATION = z_BB)
+Public Function unf_Calc_Zgas_d(T_K As Double, P_MPa As Double, GammaGas As Double, Optional ByVal z_cor As Z_CORRELATION = z_Dranchuk)
 ' calculus of z factor
 ' rnt 20150303 не желательно использовать значение коррел€ции отличное от 0
 ' http://petrowiki.org/Real_gases

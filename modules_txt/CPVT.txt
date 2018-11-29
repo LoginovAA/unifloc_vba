@@ -724,6 +724,7 @@ Public Sub Calc_PVT(p_atma As Double, T_C As Double)
     Dim ranges_good As Boolean
     Dim Muo_deadoil_cP As Double
     Dim Muo_saturated_cP As Double
+    Dim r_si_fact As Double
 On Error GoTo err1:
     T_K = T_C + const_T_K_min
     p_PTcalc.p_atma = p_atma
@@ -759,8 +760,10 @@ On Error GoTo err1:
                 p_fact = 1
             End If
             If (Bo_calbr_m3m3 > 0) Then 'Calculate oil formation volume factor correction factor
-                Bob_m3m3_sat = unf_FVF_Saturated_Oil_Standing(Rsb_calbr_m3m3, p_gamma_g, Tres_K, p_gamma_o)  ' значение по коррел€ции считаем также дл€ пластовой температуры
-                b_fact = (Bo_calbr_m3m3 - 1) / (Bob_m3m3_sat - 1)
+                'Bob_m3m3_sat = unf_FVF_Saturated_Oil_Standing(Rsb_calbr_m3m3, p_gamma_g, Tres_K, p_gamma_o)
+                Bob_m3m3_sat = unf_FVF_Saturated_Oil_Standing(unf_GOR_Standing(p_bi, p_gamma_g, Tres_K, p_gamma_o), p_gamma_g, Tres_K, p_gamma_o) ' значение по коррел€ции считаем также дл€ пластовой температуры
+                 b_fact = (Bo_calbr_m3m3 - 1) / (Bob_m3m3_sat - 1)
+                 ' b_fact = Bo_calbr_m3m3 / Bob_m3m3_sat
             Else ' not specified, use from correlations
                 b_fact = 1
             End If
@@ -769,12 +772,17 @@ On Error GoTo err1:
             Else
                 mu_fact = 1
             End If
+            'If (Rsb_calbr_m3m3 > 0) Then
+            '      r_si_fact = Rsb_calbr_m3m3 / unf_GOR_Standing(p_bi, p_gamma_g, Tres_K, p_gamma_o)
+           ' Else
+            '      r_si_fact = 1
+           ' End If
             p_bi = unf_Bubblepoint_Standing(Rsb_calbr_m3m3, p_gamma_g, T_K, p_gamma_o)   ' давление насыщени€ по коррел€ции при текущей температуре
-            If (Pb_calbr_MPa > 0) Then 'user specified
-                p_fact = p_bi / Pb_calbr_MPa
-            Else ' not specified, use from correlations
-                p_fact = 1
-            End If
+    '        If (Pb_calbr_MPa > 0) Then 'user specified
+     '           p_fact = p_bi / Pb_calbr_MPa
+      '      Else ' not specified, use from correlations
+      '          p_fact = 1
+      '      End If
             P_MPa = P_MPa * p_fact   ' раст€нем давление чтобы нат€нуть его на калиброванное значение
             If P_MPa > p_bi Then 'apply correction to undersaturated oil 'undersaturated oil
                  r_si = Rsb_calbr_m3m3   ' выходное значение такое будет
@@ -783,7 +791,8 @@ On Error GoTo err1:
                  p_Bo_m3m3 = Bob_m3m3_sat * Exp(p_copmressibility_o_1atm * (p_bi - P_MPa))
                  p_Muo_cP = mu_fact * unf_OilViscosity_Vasquez_Beggs(Muo_saturated_cP, P_MPa, p_bi)  'Vesquez&Beggs
             Else 'apply correction to saturated oil
-                r_si = unf_GOR_Standing(P_MPa, p_gamma_g, T_K, p_gamma_o)
+                'r_si = r_si_fact * unf_GOR_Standing(P_MPa, p_gamma_g, T_K, p_gamma_o)
+                 r_si = unf_GOR_Standing(P_MPa, p_gamma_g, T_K, p_gamma_o)
                 p_Bo_m3m3 = b_fact * (unf_FVF_Saturated_Oil_Standing(r_si, p_gamma_g, T_K, gamma_o) - 1) + 1 ''Standing. it is assumed that at pressure 1 atma bo=1
                 p_Muo_cP = mu_fact * unf_SaturatedOilViscosity_Beggs_Robinson(r_si, Muo_deadoil_cP)  'Beggs & Robinson
             End If

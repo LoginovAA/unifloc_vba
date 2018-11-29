@@ -532,7 +532,8 @@ pgtf = pgef + pgff
 '     or core.
 '     --------------------------------------------------------------
 pge = pgec
-pgf = pgfc
+'pgf = pgfc
+pgf = pgfcs
 pgt = pgtc
 pga = 0#
 L999:
@@ -1949,7 +1950,7 @@ rhom = denl * (1# - Hg) + deng * Hg
 vism = visl * (1# - Hg) + visg * Hg
 Re = di * rhom * vme / vism
  'FFM = calc_friction_factor(RE, ed, 1)
-Call FRFACT(Re, ed, FFM, ioerr, ierr)
+Call FRFACT(Re, ed, di, FFM, ioerr, ierr)
 If (ierr = 1) Then
     addLogMsg "dbtran: error Close #ioerr:exit subed from frfact call."
     GoTo L999
@@ -2027,7 +2028,7 @@ End Sub
 '                                                                         'FRFACT
 '     ******************************************************************  'FRFACT
 '                                                                         'FRFACT
-  Private Sub FRFACT(Re, ed, FFM, ioerr, ierr)                                    'FRFACT
+  Private Sub FRFACT(Re, ed, di, FFM, ioerr, ierr)                                   'FRFACT
 '                                                                         'FRFACT
 '     **************************************                              'FRFACT
 '     Check input variables for valid range.                              'FRFACT
@@ -2063,7 +2064,7 @@ End Sub
 '                                                                         'FRFACT
          Dim FGI
          'FGI = 1 / (1.14 - 2 * log10(ed + 21.25 / Re ^ 0.9)) ^ 2          'FRFACT
-        FGI = 0.25 / (log10(2 * ed / 0.062 / 3.7 - 5.02 / Re * log10(2 * ed / 0.062 / 3.7 + 13# / Re))) ^ 2
+        FGI = 0.25 / (log10(2 * ed / di / 3.7 - 5.02 / Re * log10(2 * ed / di / 3.7 + 13# / Re))) ^ 2
 ' ------------------------------------------------------------            'FRFACT
 '     Set counter. Colebrook Equation is iterative. If convergence        'FRFACT
 '     is not attained in 10 iterations an infinite loop will              'FRFACT
@@ -2074,7 +2075,7 @@ End Sub
          Dim i, f, DIFF
          i = 1                                                            'FRFACT
 '1:        f = 1.14 - 2 * log10(ed + 9.34 / (Re * Sqr(FGI)))
-1:          f = 1.74 - 2 * log10(2 * ed / 0.062 + 18.7 / (Re * Sqr(FGI)))
+1:          f = 1.74 - 2 * log10(2 * ed / di + 18.7 / (Re * Sqr(FGI)))
          FFM = (1 / f) ^ 2                                                'FRFACT
          DIFF = Abs(FGI - FFM)                                            'FRFACT
          If (DIFF > 0.0001) Then                                          'FRFACT
