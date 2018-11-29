@@ -1,0 +1,67 @@
+ Call ansari(ang1=90, arr_d_m=0.062, roughness_d=0.0001, P_atma=20, Vsl_msec=0.772, Vsg_msec=0.619, lambda_l=0.554, rho_grc_kgm3=23.44, rho_lrc_kgm3=747.84, Mug_rc_cP=1.017, Mul_rc_cP=2.377, sigma_l_Nm=0.0469, Hl_out_fr=0, pgf_out_atmm=0, pge_out_atmm=0, pga_out_atmm=0, pgt_out_atmm=0, fpat_out_num, , ierr)
+
+Q_l=201.39 Q_g=161.53
+
+
+Qo_rc_m3day = Qo_scm3day * Bo_m3m3=200*1.007
+
+p_Bw_m3m3=1.001
+dvwp = -1.95301 * 10 ^ (-9) * psi * f - 1.72834 * 10 ^ (-13) * psi ^ 2 * f - 3.58922 * 10 ^ (-7) * psi - 2.25341 * 10 ^ (-10) * psi ^ 2
+dvwt = -1.0001 * 10 ^ (-2) + 1.33391 * 10 ^ (-4) * f + 5.50654 * 10 ^ (-7) * f ^ 2
+unf_Calc_Bw_m3m3 = (1 + dvwp) * (1 + dvwt)=1.001
+
+Qgas_rc_m3day = QgasInSitu_scm3day * Bg_m3m3
+
+Bg_m3m3=4.69*10(-2)
+unf_calc_Bg_z_m3m3 = 0.00034722 * T_K * z / P_MPa=2.0265
+
+QgasInSitu_scm3day = (Qgas_scm3day - rs_m3m3 * Qo_scm3day)
+
+rs_m3m3 = p_Rs_m3m3=2.778
+yg = 1.225 + 0.001648 * Temperature_K - 1.769 / gamma_oil=-0.65
+unf_GOR_Standing = gamma_gas * (1.92 * Pressure_MPa=0.297 / 10 ^ yg) ^ 1.204
+P_MPa = P_MPa * p_fact=2.026*0.1465
+p_fact = p_bi / Pb_calbr_MPa=2.226/15.198
+Pb_calbr_MPa = p_Pb_atma * const_convert_atma_MPa=150*0.101325
+p_bi = unf_Bubblepoint_Standing(Rsb_calbr_m3m3, p_gamma_g, Tres_K, p_gamma_o)=2.226
+yg = 1.225 + 0.001648 * Temperature_K=393 - 1.769 / gamma_oil=-0.486
+unf_Bubblepoint_Standing = 0.5197 * (rsb_m3m3=20 / gamma_gas) ^ 0.83 * 10 ^ yg=2.226  
+
+Qgas_scm3day = Qo_scm3day * Rp_m3m3 + Qgfree_scm3day
+
+p_Bo_m3m3 = b_fact * (unf_FVF_Saturated_Oil_Standing(r_si, p_gamma_g, T_K, gamma_o) - 1) + 1
+f = 5.615 * rs_m3m3 * (gamma_gas / gamma_oil) ^ 0.5 + 2.25 * Temperature_K - 575
+unf_FVF_Saturated_Oil_Standing = 0.972 + 0.000147 * f ^ 1.175=1,005
+b_fact = (Bo_calbr_m3m3 - 1) / (Bob_m3m3_sat - 1)=(1.2-1)/(1.1558-1)=1.28
+Bob_m3m3_sat = unf_FVF_Saturated_Oil_Standing(Rsb_calbr_m3m3, p_gamma_g, Tres_K, p_gamma_o)=1.1558 при rs_m3m3=20 и Temperature_K=393
+
+
+Call ansari_ANDREW(ang1=90, Di=0.203, ED=0.00016, p=20, vm=3.584, ens=0.718, DENG=1.52, DENL=46.52, VISG=1.02, VISL=1.82, SURL=8.41, E=0, PGF=0, pge=0, PGA=0, PGT=0, fpat, fileNumber=1, ierr=0)
+yg=-0.4846
+p_bi=Bubblepoint_Standing_ANDREW = 0.5197 * (Rsb_m3m3=80 / Gamma_gas=0.9) ^ 0.83 * 10 ^ yg=7.058
+
+
+ Call ansari_ANDREW(ang1=90, Di=0.203=0.062/0.3048, ED=0.00016, p=20, vm=4.023=(0.+0.)/0.3048, ens=0.633, DENG=1.52=24.35/16.01, DENL=46.66=/16.01, VISG=1.02, VISL=2.05, SURL=8.41, E=0, PGF=0, pge=0, PGA=0, PGT=0, fpat, fileNumber=1, ierr=0)
+
+lambda_l = Q_l=202.77 / (Q_l + Q_g=117.09)
+sigma_l = sigma_o * (1 - f_w) + sigma_w * f_w
+V_sl = 0.000011574 * Q_l / a_p=0.777
+V_sg = 0.000011574 * Q_g / a_p=0.449
+V_m = V_sl + V_sg
+Q_o = c_q(Units) * q_osc * b_o=1.013
+Q_w = c_q(Units) * q_wsc * b_w=1.001
+Q_l = Q_o + Q_w
+Q_g = b_g * (q_gsc - r_s * q_osc)=4.51*10(-2)*(4000-7.03*200)
+r_s=GOR_Standing_ANDREW = Gamma_gas * (1.92 * Pressure_MPa=0.64 / 10 ^ yg) ^ 1.204=7.03
+
+p_mpa = p_mpa * p_fact=2.026*0.317
+p_fact = p_bi / P_rb=4.817/15.195
+P_rb = P_rb * c_p_mpa=150*0.1013
+p_bi=Bubblepoint_Standing_ANDREW = 0.5197 * (Rsb_m3m3 / Gamma_gas) ^ 0.83 * 10 ^ yg=4.817
+
+yg = 1.225 + 0.001648 * Temperature_K=293 - 1.769 / gamma_oil=-0.65
+b_oi = b_fact * (FVF_Saturated_Oil_Standing_ANDREW(r_si, gamma_g, t, gamma_o) - 1) + 1=1.013=0.87*(1.016-1)+1
+F = 5.615 * Rs_m3m3=80или7.03 * (Gamma_gas / gamma_oil) ^ 0.5 + 2.25 * Temperature_K - 575
+b_o_sat=FVF_Saturated_Oil_Standing_ANDREW = 0.972 + 0.000147 * F ^ 1.175=1.23
+b_fact = (b_ro - 1) / (b_o_sat - 1)=0.87
+
